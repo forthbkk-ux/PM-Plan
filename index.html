@@ -1514,6 +1514,41 @@
       justify-content: space-between;
     }
 
+    .day-chip-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+    .day-chip {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 0;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #334155;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      touch-action: manipulation;
+    }
+    .day-chip:hover {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+    .day-chip:active {
+      transform: scale(0.95);
+    }
+    .day-chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+    }
+
     .month-chip-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -1986,13 +2021,13 @@
     </div>
   </div>
 
-  <!-- Quick Date Picker Bottom Sheet (กำหนดเดือน/ปี พ.ศ. ได้ทันทีบนมือถือ) -->
+  <!-- Quick Date Picker Bottom Sheet (กำหนดวัน/เดือน/ปี พ.ศ. ได้ทันทีบนมือถือ) -->
   <div id="quickDateSheet" class="modal-backdrop" onclick="onBackdropClick(event, 'quickDateSheet')">
     <div class="modal" role="dialog" aria-modal="true" style="max-width:440px;">
       <div class="modal-handle"></div>
       <div class="modal-header">
         <div>
-          <h3 class="modal-title" id="quickDateSheetTitle">📅 กำหนดเดือน/ปี (พ.ศ.)</h3>
+          <h3 class="modal-title" id="quickDateSheetTitle">📅 กำหนดวัน/เดือน/ปี (พ.ศ.)</h3>
           <div id="quickDateSheetSub" style="font-size:0.82rem; color:var(--text-light); margin-top:2px;"></div>
         </div>
         <button type="button" class="modal-close" onclick="closeModal('quickDateSheet')">&times;</button>
@@ -2001,8 +2036,51 @@
       <div class="modal-body">
         <!-- Date Preview Display -->
         <div class="date-preview-box">
-          <div class="date-preview-label">เดือน / ปี (พ.ศ.) ที่เลือก</div>
-          <div class="date-preview-value" id="quickDatePreview">--/----</div>
+          <div class="date-preview-label">วัน / เดือน / ปี (พ.ศ.) ที่เลือก</div>
+          <div class="date-preview-value" id="quickDatePreview">--/--/----</div>
+        </div>
+
+        <!-- Day Selection (1-31) -->
+        <div class="date-section-title">
+          <span>📅 เลือกวันที่ (1 - 31)</span>
+          <span style="font-size:0.75rem; font-weight:normal; color:var(--text-light);">แตะเลือกหรือพิมพ์ได้</span>
+        </div>
+        <div class="day-chip-grid" id="quickDayGrid">
+          <button type="button" class="day-chip" data-day="01" onclick="selectQuickDay('01')">1</button>
+          <button type="button" class="day-chip" data-day="02" onclick="selectQuickDay('02')">2</button>
+          <button type="button" class="day-chip" data-day="03" onclick="selectQuickDay('03')">3</button>
+          <button type="button" class="day-chip" data-day="04" onclick="selectQuickDay('04')">4</button>
+          <button type="button" class="day-chip" data-day="05" onclick="selectQuickDay('05')">5</button>
+          <button type="button" class="day-chip" data-day="06" onclick="selectQuickDay('06')">6</button>
+          <button type="button" class="day-chip" data-day="07" onclick="selectQuickDay('07')">7</button>
+          <button type="button" class="day-chip" data-day="08" onclick="selectQuickDay('08')">8</button>
+          <button type="button" class="day-chip" data-day="09" onclick="selectQuickDay('09')">9</button>
+          <button type="button" class="day-chip" data-day="10" onclick="selectQuickDay('10')">10</button>
+          <button type="button" class="day-chip" data-day="11" onclick="selectQuickDay('11')">11</button>
+          <button type="button" class="day-chip" data-day="12" onclick="selectQuickDay('12')">12</button>
+          <button type="button" class="day-chip" data-day="13" onclick="selectQuickDay('13')">13</button>
+          <button type="button" class="day-chip" data-day="14" onclick="selectQuickDay('14')">14</button>
+          <button type="button" class="day-chip" data-day="15" onclick="selectQuickDay('15')">15</button>
+          <button type="button" class="day-chip" data-day="16" onclick="selectQuickDay('16')">16</button>
+          <button type="button" class="day-chip" data-day="17" onclick="selectQuickDay('17')">17</button>
+          <button type="button" class="day-chip" data-day="18" onclick="selectQuickDay('18')">18</button>
+          <button type="button" class="day-chip" data-day="19" onclick="selectQuickDay('19')">19</button>
+          <button type="button" class="day-chip" data-day="20" onclick="selectQuickDay('20')">20</button>
+          <button type="button" class="day-chip" data-day="21" onclick="selectQuickDay('21')">21</button>
+          <button type="button" class="day-chip" data-day="22" onclick="selectQuickDay('22')">22</button>
+          <button type="button" class="day-chip" data-day="23" onclick="selectQuickDay('23')">23</button>
+          <button type="button" class="day-chip" data-day="24" onclick="selectQuickDay('24')">24</button>
+          <button type="button" class="day-chip" data-day="25" onclick="selectQuickDay('25')">25</button>
+          <button type="button" class="day-chip" data-day="26" onclick="selectQuickDay('26')">26</button>
+          <button type="button" class="day-chip" data-day="27" onclick="selectQuickDay('27')">27</button>
+          <button type="button" class="day-chip" data-day="28" onclick="selectQuickDay('28')">28</button>
+          <button type="button" class="day-chip" data-day="29" onclick="selectQuickDay('29')">29</button>
+          <button type="button" class="day-chip" data-day="30" onclick="selectQuickDay('30')">30</button>
+          <button type="button" class="day-chip" data-day="31" onclick="selectQuickDay('31')">31</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+          <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); white-space:nowrap;">หรือระบุวันที่:</label>
+          <input type="number" id="quickDateDayInput" class="input" style="padding:6px 10px; font-size:0.9rem; max-width:110px;" min="1" max="31" placeholder="1 - 31" oninput="onQuickDateDayInput(this.value)" />
         </div>
 
         <!-- Month Selection (1-12) -->
@@ -2048,7 +2126,7 @@
 
       <div class="modal-footer" style="display:flex; gap:10px;">
         <button type="button" class="btn btn-outline" style="flex:1;" onclick="closeModal('quickDateSheet')">ยกเลิก</button>
-        <button type="button" class="btn btn-primary" style="flex:2;" onclick="applyQuickDateSave()">💾 บันทึกเดือน/ปี</button>
+        <button type="button" class="btn btn-primary" style="flex:2;" onclick="applyQuickDateSave()">💾 บันทึกวัน/เดือน/ปี</button>
       </div>
     </div>
   </div>
@@ -2396,12 +2474,12 @@
         activeCols: 15,
         locLabels: { sub: 'ตำบล', dist: 'อำเภอ', prov: 'จังหวัด' },
         rounds: [
-          { id: 'R1', label: 'ครั้งที่ 1', dateCol: 4, statusCol: 5, defaultDate: '08/2570' },
-          { id: 'R2', label: 'ครั้งที่ 2', dateCol: 6, statusCol: 7, defaultDate: '08/2571' },
-          { id: 'R3', label: 'ครั้งที่ 3', dateCol: 8, statusCol: 9, defaultDate: '08/2572' },
-          { id: 'R4', label: 'ครั้งที่ 4', dateCol: 10, statusCol: 11, defaultDate: '08/2573' },
-          { id: 'PAINT', label: 'ซ่อมแซมทาสีโครงสร้างเสา', dateCol: 12, statusCol: null, defaultDate: '06/2574', isPaint: true },
-          { id: 'R5', label: 'ครั้งที่ 5', dateCol: 13, statusCol: 14, defaultDate: '07/2574' }
+          { id: 'R1', label: 'ครั้งที่ 1', dateCol: 4, statusCol: 5, defaultDate: '01/08/2570' },
+          { id: 'R2', label: 'ครั้งที่ 2', dateCol: 6, statusCol: 7, defaultDate: '01/08/2571' },
+          { id: 'R3', label: 'ครั้งที่ 3', dateCol: 8, statusCol: 9, defaultDate: '01/08/2572' },
+          { id: 'R4', label: 'ครั้งที่ 4', dateCol: 10, statusCol: 11, defaultDate: '01/08/2573' },
+          { id: 'PAINT', label: 'ซ่อมแซมทาสีโครงสร้างเสา', dateCol: 12, statusCol: null, defaultDate: '01/06/2574', isPaint: true },
+          { id: 'R5', label: 'ครั้งที่ 5', dateCol: 13, statusCol: 14, defaultDate: '01/07/2574' }
         ]
       },
       BSGW: {
@@ -2412,17 +2490,17 @@
         activeCols: 25,
         locLabels: { sub: 'ตำบล', dist: 'อำเภอ', prov: 'จังหวัด' },
         rounds: [
-          { id: 'R1', label: 'ครั้งที่ 1', dateCol: 4, statusCol: 5, defaultDate: '02/2570' },
-          { id: 'R2', label: 'ครั้งที่ 2', dateCol: 6, statusCol: 7, defaultDate: '08/2570' },
-          { id: 'R3', label: 'ครั้งที่ 3', dateCol: 8, statusCol: 9, defaultDate: '02/2571' },
-          { id: 'R4', label: 'ครั้งที่ 4', dateCol: 10, statusCol: 11, defaultDate: '08/2571' },
-          { id: 'R5', label: 'ครั้งที่ 5', dateCol: 12, statusCol: 13, defaultDate: '02/2572' },
-          { id: 'R6', label: 'ครั้งที่ 6', dateCol: 14, statusCol: 15, defaultDate: '08/2572' },
-          { id: 'R7', label: 'ครั้งที่ 7', dateCol: 16, statusCol: 17, defaultDate: '02/2573' },
-          { id: 'R8', label: 'ครั้งที่ 8', dateCol: 18, statusCol: 19, defaultDate: '08/2573' },
-          { id: 'R9', label: 'ครั้งที่ 9', dateCol: 20, statusCol: 21, defaultDate: '02/2574' },
-          { id: 'PAINT', label: 'ซ่อมแซมทาสีโครงสร้างเสา', dateCol: 22, statusCol: null, defaultDate: '06/2574', isPaint: true },
-          { id: 'R10', label: 'ครั้งที่ 10', dateCol: 23, statusCol: 24, defaultDate: '07/2574' }
+          { id: 'R1', label: 'ครั้งที่ 1', dateCol: 4, statusCol: 5, defaultDate: '01/02/2570' },
+          { id: 'R2', label: 'ครั้งที่ 2', dateCol: 6, statusCol: 7, defaultDate: '01/08/2570' },
+          { id: 'R3', label: 'ครั้งที่ 3', dateCol: 8, statusCol: 9, defaultDate: '01/02/2571' },
+          { id: 'R4', label: 'ครั้งที่ 4', dateCol: 10, statusCol: 11, defaultDate: '01/08/2571' },
+          { id: 'R5', label: 'ครั้งที่ 5', dateCol: 12, statusCol: 13, defaultDate: '01/02/2572' },
+          { id: 'R6', label: 'ครั้งที่ 6', dateCol: 14, statusCol: 15, defaultDate: '01/08/2572' },
+          { id: 'R7', label: 'ครั้งที่ 7', dateCol: 16, statusCol: 17, defaultDate: '01/02/2573' },
+          { id: 'R8', label: 'ครั้งที่ 8', dateCol: 18, statusCol: 19, defaultDate: '01/08/2573' },
+          { id: 'R9', label: 'ครั้งที่ 9', dateCol: 20, statusCol: 21, defaultDate: '01/02/2574' },
+          { id: 'PAINT', label: 'ซ่อมแซมทาสีโครงสร้างเสา', dateCol: 22, statusCol: null, defaultDate: '01/06/2574', isPaint: true },
+          { id: 'R10', label: 'ครั้งที่ 10', dateCol: 23, statusCol: 24, defaultDate: '01/07/2574' }
         ]
       },
       BSSC: {
@@ -2433,16 +2511,16 @@
         activeCols: 24,
         locLabels: { sub: 'แขวง', dist: 'เขต', prov: 'จังหวัด' },
         rounds: [
-          { id: 'R1', label: 'ครั้งที่ 1', dateCol: 4, statusCol: 5, defaultDate: '02/2570' },
-          { id: 'R2', label: 'ครั้งที่ 2', dateCol: 6, statusCol: 7, defaultDate: '08/2570' },
-          { id: 'R3', label: 'ครั้งที่ 3', dateCol: 8, statusCol: 9, defaultDate: '02/2571' },
-          { id: 'R4', label: 'ครั้งที่ 4', dateCol: 10, statusCol: 11, defaultDate: '08/2571' },
-          { id: 'R5', label: 'ครั้งที่ 5', dateCol: 12, statusCol: 13, defaultDate: '02/2572' },
-          { id: 'R6', label: 'ครั้งที่ 6', dateCol: 14, statusCol: 15, defaultDate: '08/2572' },
-          { id: 'R7', label: 'ครั้งที่ 7', dateCol: 16, statusCol: 17, defaultDate: '02/2573' },
-          { id: 'R8', label: 'ครั้งที่ 8', dateCol: 18, statusCol: 19, defaultDate: '08/2573' },
-          { id: 'R9', label: 'ครั้งที่ 9', dateCol: 20, statusCol: 21, defaultDate: '02/2574' },
-          { id: 'R10', label: 'ครั้งที่ 10', dateCol: 22, statusCol: 23, defaultDate: '07/2574' }
+          { id: 'R1', label: 'ครั้งที่ 1', dateCol: 4, statusCol: 5, defaultDate: '01/02/2570' },
+          { id: 'R2', label: 'ครั้งที่ 2', dateCol: 6, statusCol: 7, defaultDate: '01/08/2570' },
+          { id: 'R3', label: 'ครั้งที่ 3', dateCol: 8, statusCol: 9, defaultDate: '01/02/2571' },
+          { id: 'R4', label: 'ครั้งที่ 4', dateCol: 10, statusCol: 11, defaultDate: '01/08/2571' },
+          { id: 'R5', label: 'ครั้งที่ 5', dateCol: 12, statusCol: 13, defaultDate: '01/02/2572' },
+          { id: 'R6', label: 'ครั้งที่ 6', dateCol: 14, statusCol: 15, defaultDate: '01/08/2572' },
+          { id: 'R7', label: 'ครั้งที่ 7', dateCol: 16, statusCol: 17, defaultDate: '01/02/2573' },
+          { id: 'R8', label: 'ครั้งที่ 8', dateCol: 18, statusCol: 19, defaultDate: '01/08/2573' },
+          { id: 'R9', label: 'ครั้งที่ 9', dateCol: 20, statusCol: 21, defaultDate: '01/02/2574' },
+          { id: 'R10', label: 'ครั้งที่ 10', dateCol: 22, statusCol: 23, defaultDate: '01/07/2574' }
         ]
       }
     };
@@ -2494,12 +2572,26 @@
 
     function normalizeDateInput(val) {
       const s = String(val || '').trim();
-      const m = s.match(/^(\d{1,2})\/(\d{4})$/);
-      if (m) {
-        const mm = m[1].padStart(2, '0');
-        return `${mm}/${m[2]}`;
+      if (!s || s === '-') return '';
+      // DD/MM/YYYY
+      const m3 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (m3) {
+        const dd = m3[1].padStart(2, '0');
+        const mm = m3[2].padStart(2, '0');
+        return `${dd}/${mm}/${m3[3]}`;
+      }
+      // MM/YYYY -> add default day 01
+      const m2 = s.match(/^(\d{1,2})\/(\d{4})$/);
+      if (m2) {
+        const mm = m2[1].padStart(2, '0');
+        return `01/${mm}/${m2[2]}`;
       }
       return s;
+    }
+
+    function formatDateDisplay(rawVal) {
+      if (!rawVal || rawVal === '-' || String(rawVal).trim() === '') return '';
+      return normalizeDateInput(rawVal);
     }
 
     function getStatusClass(statusText) {
@@ -3420,15 +3512,15 @@
         let roundsHtml = '';
         if (visibleRounds.length === 1) {
           const rd = visibleRounds[0];
-          const dateVal = c[rd.dateCol] || '-';
+          const dateVal = formatDateDisplay(c[rd.dateCol]) || '-';
           if (rd.isPaint) {
             roundsHtml = `
               <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
                 <div>
                   <div style="font-weight:700; color:#92400e; font-size:0.95rem;">🎨 ${escapeHtml(rd.label)}</div>
                   <div style="margin-top:4px;">
-                    <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="แตะเพื่อกำหนดเดือน/ปี พ.ศ.">
-                      📅 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ ดด/ปปปป')} ✏️
+                    <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="แตะเพื่อกำหนดวัน/เดือน/ปี พ.ศ.">
+                      📅 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ วว/ดด/ปปปป')} ✏️
                     </button>
                   </div>
                 </div>
@@ -3443,8 +3535,8 @@
               <div style="background:#f8fafc; border:1px solid var(--border); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:8px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                   <span style="font-weight:700; font-size:0.92rem; color:var(--primary);">📌 ${escapeHtml(rd.label)}</span>
-                  <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="แตะเพื่อกำหนดเดือน/ปี พ.ศ.">
-                    📅 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ ดด/ปปปป')} ✏️
+                  <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="แตะเพื่อกำหนดวัน/เดือน/ปี พ.ศ.">
+                    📅 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ วว/ดด/ปปปป')} ✏️
                   </button>
                 </div>
                 <button type="button" class="card-status-pill-btn ${stClass}" style="width:100%; justify-content:space-between; padding:10px 14px; font-size:0.95rem; border-radius:10px;"
@@ -3461,14 +3553,14 @@
         } else {
           roundsHtml = '<div class="card-rounds-box">';
           visibleRounds.forEach(rd => {
-            const dateVal = c[rd.dateCol] || '-';
+            const dateVal = formatDateDisplay(c[rd.dateCol]) || '-';
             if (rd.isPaint) {
               roundsHtml += `
                 <div class="card-round-row">
                   <div class="card-round-info">
                     <span class="card-round-label">🎨 ${escapeHtml(rd.label)}</span>
-                    <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="แตะเพื่อกำหนดเดือน/ปี พ.ศ.">
-                      📅 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ ดด/ปปปป')} ✏️
+                    <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="แตะเพื่อกำหนดวัน/เดือน/ปี พ.ศ.">
+                      📅 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ วว/ดด/ปปปป')} ✏️
                     </button>
                   </div>
                   <div>
@@ -3485,8 +3577,8 @@
                 <div class="card-round-row">
                   <div class="card-round-info">
                     <span class="card-round-label">${escapeHtml(rd.label)}</span>
-                    <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="แตะเพื่อกำหนดเดือน/ปี พ.ศ.">
-                      📅 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ ดด/ปปปป')} ✏️
+                    <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="แตะเพื่อกำหนดวัน/เดือน/ปี พ.ศ.">
+                      📅 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ วว/ดด/ปปปป')} ✏️
                     </button>
                   </div>
                   <div>
@@ -3600,12 +3692,12 @@
 
         let roundColsHtml = '';
         visibleRounds.forEach(rd => {
-          const dateVal = c[rd.dateCol] || '-';
+          const dateVal = formatDateDisplay(c[rd.dateCol]) || '-';
           if (rd.isPaint) {
             roundColsHtml += `
               <td>
-                <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="กำหนดเดือน/ปี พ.ศ.">
-                  🎨 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ ดด/ปปปป')} ✏️
+                <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="กำหนดวัน/เดือน/ปี พ.ศ.">
+                  🎨 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ วว/ดด/ปปปป')} ✏️
                 </button>
               </td>
             `;
@@ -3619,8 +3711,8 @@
             roundColsHtml += `
               <td>
                 <div class="pm-cell-wrap">
-                  <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="กำหนดเดือน/ปี พ.ศ.">
-                    📅 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ ดด/ปปปป')} ✏️
+                  <button type="button" class="card-date-badge-btn" onclick="openQuickDateSheet(${r.sheetRow}, ${rd.dateCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(dateVal)}')" title="กำหนดวัน/เดือน/ปี พ.ศ.">
+                    📅 ${escapeHtml(dateVal && dateVal !== '-' ? dateVal : 'ระบุ วว/ดด/ปปปป')} ✏️
                   </button>
                   <select class="status-select ${stClass}"
                     aria-label="${escapeHtml(rd.label)} ของ ${escapeHtml(c[0])}"
@@ -3741,29 +3833,57 @@
     }
 
     // =========================================================================
-    // Quick Date Picker Bottom Sheet Logic (กำหนดเดือน/ปี พ.ศ. ใช้งานง่ายบนมือถือ)
+    // Quick Date Picker Bottom Sheet Logic (กำหนดวัน/เดือน/ปี พ.ศ. ใช้งานง่ายบนมือถือ)
     // =========================================================================
     let activeQuickDateTarget = null;
+    let selectedDateDay = '01';
     let selectedDateMonth = '08';
     let selectedDateYear = '2570';
 
     function openQuickDateSheet(sheetRow, colIndex, roundLabel, stationName, curDate) {
       activeQuickDateTarget = { sheetRow, colIndex, roundLabel, stationName, curDate };
-      document.getElementById('quickDateSheetTitle').textContent = `📅 กำหนดเดือน/ปี: ${roundLabel}`;
+      document.getElementById('quickDateSheetTitle').textContent = `📅 กำหนดวัน/เดือน/ปี: ${roundLabel}`;
       document.getElementById('quickDateSheetSub').textContent = stationName;
 
+      let d = '01';
       let m = '08';
       let y = '2570';
       if (curDate && curDate !== '-' && curDate.includes('/')) {
-        const parts = curDate.split('/');
-        if (parts[0]) m = parts[0].trim().padStart(2, '0');
-        if (parts[1]) y = parts[1].trim();
+        const parts = curDate.split('/').map(p => p.trim());
+        if (parts.length >= 3) {
+          if (parts[0]) d = parts[0].padStart(2, '0');
+          if (parts[1]) m = parts[1].padStart(2, '0');
+          if (parts[2]) y = parts[2];
+        } else if (parts.length === 2) {
+          d = '01';
+          if (parts[0]) m = parts[0].padStart(2, '0');
+          if (parts[1]) y = parts[1];
+        }
       }
+      selectedDateDay = d;
       selectedDateMonth = m;
       selectedDateYear = y;
 
       syncQuickDateUI();
       document.getElementById('quickDateSheet').classList.add('open');
+    }
+
+    function selectQuickDay(d) {
+      let num = parseInt(d, 10);
+      if (isNaN(num) || num < 1) num = 1;
+      if (num > 31) num = 31;
+      selectedDateDay = String(num).padStart(2, '0');
+      syncQuickDateUI();
+    }
+
+    function onQuickDateDayInput(val) {
+      val = String(val).trim();
+      if (!val) return;
+      let num = parseInt(val, 10);
+      if (!isNaN(num) && num >= 1 && num <= 31) {
+        selectedDateDay = String(num).padStart(2, '0');
+        syncQuickDateUI();
+      }
     }
 
     function selectQuickMonth(m) {
@@ -3785,9 +3905,18 @@
     }
 
     function syncQuickDateUI() {
-      const formatted = `${selectedDateMonth}/${selectedDateYear}`;
+      const formatted = `${selectedDateDay}/${selectedDateMonth}/${selectedDateYear}`;
       const previewEl = document.getElementById('quickDatePreview');
       if (previewEl) previewEl.textContent = formatted;
+
+      document.querySelectorAll('.day-chip').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.day === selectedDateDay);
+      });
+
+      const dayInput = document.getElementById('quickDateDayInput');
+      if (dayInput && dayInput !== document.activeElement) {
+        dayInput.value = parseInt(selectedDateDay, 10);
+      }
 
       document.querySelectorAll('.month-chip').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.month === selectedDateMonth);
@@ -3807,7 +3936,7 @@
       closeModal('quickDateSheet');
       if (!activeQuickDateTarget) return;
 
-      const newVal = `${selectedDateMonth}/${selectedDateYear}`;
+      const newVal = `${selectedDateDay}/${selectedDateMonth}/${selectedDateYear}`;
       const { sheetRow, colIndex, stationName } = activeQuickDateTarget;
       const rows = (appData[activeTab] && appData[activeTab].rows) || [];
       const rowObj = rows.find(r => r.sheetRow === sheetRow);
@@ -3935,7 +4064,7 @@
         const opts = STATUS_OPTIONS.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
         container.innerHTML = `<select id="bulkTargetValue" class="select">${opts}</select>`;
       } else {
-        container.innerHTML = `<input type="text" id="bulkTargetValue" class="input" placeholder="ดด/ปปปป เช่น 08/2570" style="width:160px;" />`;
+        container.innerHTML = `<input type="text" id="bulkTargetValue" class="input" placeholder="วว/ดด/ปปปป เช่น 01/08/2570" style="width:170px;" />`;
       }
     }
 
@@ -3948,8 +4077,8 @@
 
       if (colType === 'date') {
         newValue = normalizeDateInput(newValue);
-        if (newValue && !/^\d{2}\/\d{4}$/.test(newValue)) {
-          alert('กรุณากรอกเดือน/ปี เป็นรูปแบบ ดด/ปปปป เช่น 08/2570');
+        if (newValue && !/^\d{2}\/\d{2}\/\d{4}$/.test(newValue)) {
+          alert('กรุณากรอกวัน/เดือน/ปี เป็นรูปแบบ วว/ดด/ปปปป เช่น 01/08/2570');
           return;
         }
       }
@@ -4024,8 +4153,8 @@
                 <span>🎨 ${escapeHtml(rd.label)}</span>
               </div>
               <div class="field-group">
-                <label class="field-label">กำหนดเดือน/ปี พ.ศ. (ดด/ปปปป)</label>
-                <input type="text" class="input date-modal-input" data-col="${rd.dateCol}" data-dtype="date" value="${escapeHtml(dateVal)}" placeholder="เช่น 06/2574" onfocus="lastFocusedDateInput = this" />
+                <label class="field-label">กำหนดวัน/เดือน/ปี พ.ศ. (วว/ดด/ปปปป)</label>
+                <input type="text" class="input date-modal-input" data-col="${rd.dateCol}" data-dtype="date" value="${escapeHtml(formatDateDisplay(dateVal))}" placeholder="เช่น 01/06/2574" onfocus="lastFocusedDateInput = this" />
               </div>
             </div>
           `;
@@ -4042,8 +4171,8 @@
               </div>
               <div class="round-box-fields">
                 <div class="field-group">
-                  <label class="field-label">เดือน/ปี (ดด/ปปปป)</label>
-                  <input type="text" class="input date-modal-input" data-col="${rd.dateCol}" data-dtype="date" value="${escapeHtml(dateVal)}" placeholder="เช่น ${escapeHtml(rd.defaultDate)}" onfocus="lastFocusedDateInput = this" />
+                  <label class="field-label">วัน/เดือน/ปี (วว/ดด/ปปปป)</label>
+                  <input type="text" class="input date-modal-input" data-col="${rd.dateCol}" data-dtype="date" value="${escapeHtml(formatDateDisplay(dateVal))}" placeholder="เช่น ${escapeHtml(rd.defaultDate)}" onfocus="lastFocusedDateInput = this" />
                 </div>
                 <div class="field-group">
                   <label class="field-label">สถานะการดำเนินงาน</label>
@@ -4064,13 +4193,13 @@
       const target = lastFocusedDateInput || document.querySelector('.date-modal-input');
       if (!target) return;
       const current = target.value.trim();
-      if (/^\d{2}\/\d{4}$/.test(current)) {
-        const mm = current.slice(0, 2);
-        target.value = `${mm}/${yearStr}`;
-      } else if (/^\d{1,2}$/.test(current)) {
-        target.value = `${current.padStart(2, '0')}/${yearStr}`;
+      const parts = current.split('/').map(p => p.trim());
+      if (parts.length >= 3) {
+        target.value = `${parts[0].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${yearStr}`;
+      } else if (parts.length === 2) {
+        target.value = `01/${parts[0].padStart(2, '0')}/${yearStr}`;
       } else {
-        target.value = `08/${yearStr}`;
+        target.value = `01/08/${yearStr}`;
       }
       target.focus();
     }
@@ -4079,11 +4208,13 @@
       const target = lastFocusedDateInput || document.querySelector('.date-modal-input');
       if (!target) return;
       const current = target.value.trim();
-      if (/^\d{2}\/\d{4}$/.test(current)) {
-        const yyyy = current.slice(3);
-        target.value = `${monthStr}/${yyyy}`;
+      const parts = current.split('/').map(p => p.trim());
+      if (parts.length >= 3) {
+        target.value = `${parts[0].padStart(2, '0')}/${monthStr}/${parts[2]}`;
+      } else if (parts.length === 2) {
+        target.value = `01/${monthStr}/${parts[1]}`;
       } else {
-        target.value = `${monthStr}/2570`;
+        target.value = `01/${monthStr}/2570`;
       }
       target.focus();
     }
