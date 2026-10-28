@@ -1,0 +1,4410 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>สถานะเข้าบำรุงรักษา (PM)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-alt: #f1f5f9;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --text-light: #64748b;
+      --primary: #1d4ed8;
+      --primary-hover: #1e40af;
+      --primary-soft: #dbeafe;
+      --accent: #0f766e;
+      --danger: #dc2626;
+      --danger-soft: #fee2e2;
+      --warning: #d97706;
+      --warning-soft: #fef3c7;
+      --success: #059669;
+      --success-soft: #d1fae5;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 16px 36px rgba(15, 23, 42, 0.16);
+      --radius: 14px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 96px;
+    }
+
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+    }
+
+    /* Top Navigation Header */
+    .topbar {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 12px 18px;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .topbar-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 1.12rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+    }
+
+    .brand-sub {
+      margin: 1px 0 0;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Mobile Header Controls */
+    .mobile-header-actions {
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Connection Status Pill */
+    .conn-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      background: transparent;
+      font-family: inherit;
+    }
+
+    .conn-pill.connected {
+      background: rgba(16, 185, 129, 0.2);
+      color: #a7f3d0;
+      border-color: rgba(16, 185, 129, 0.45);
+    }
+
+    .conn-pill.has-pending {
+      background: rgba(245, 158, 11, 0.25);
+      color: #fef08a;
+      border-color: rgba(245, 158, 11, 0.55);
+      animation: pulseAlert 2s infinite;
+    }
+
+    @keyframes pulseAlert {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .conn-pill.readonly {
+      background: rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .conn-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 6px currentColor;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      white-space: nowrap;
+      touch-action: manipulation;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: #ffffff;
+    }
+    .btn-success:hover:not(:disabled) {
+      background: #047857;
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .btn-glass:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+    .btn-outline:hover:not(:disabled) {
+      background: var(--surface-alt);
+      border-color: #94a3b8;
+    }
+
+    .btn-danger-outline {
+      background: #ffffff;
+      color: var(--danger);
+      border-color: #fca5a5;
+    }
+    .btn-danger-outline:hover:not(:disabled) {
+      background: var(--danger-soft);
+    }
+
+    .btn-sm {
+      padding: 6px 11px;
+      font-size: 0.82rem;
+    }
+
+    .btn-icon {
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    /* View Switcher Button Group (Cards vs Table) */
+    .view-toggle-wrap {
+      display: inline-flex;
+      background: #e2e8f0;
+      padding: 3px;
+      border-radius: 9px;
+      gap: 3px;
+    }
+
+    .view-toggle-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .view-toggle-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1600px;
+      margin: 14px auto 0;
+      padding: 0 16px;
+    }
+
+    /* Pending Local Changes Banner */
+    .sync-banner {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sync-banner.visible {
+      display: flex;
+    }
+
+    .sync-banner-text {
+      color: #92400e;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Sheet Tabs Bar */
+    .tabs-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .sheet-tabs {
+      display: inline-flex;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 12px;
+      gap: 4px;
+      overflow-x: auto;
+      max-width: 100%;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .sheet-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sheet-tab {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 9px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .sheet-tab:hover {
+      color: var(--text);
+    }
+
+    .sheet-tab.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tab-badge {
+      background: #cbd5e1;
+      color: #1e293b;
+      font-size: 0.74rem;
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .sheet-tab.active .tab-badge {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    /* KPI Summary Section */
+    .kpi-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .kpi-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(130px, 1fr));
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 1280px) {
+      .kpi-grid {
+        grid-template-columns: repeat(4, minmax(130px, 1fr));
+      }
+    }
+    @media (max-width: 768px) {
+      .kpi-grid {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .kpi-grid::-webkit-scrollbar {
+        display: none;
+      }
+      .kpi-card {
+        flex: 0 0 145px;
+      }
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 11px 13px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      position: relative;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .kpi-card.active-filter {
+      outline: 2px solid var(--primary);
+      border-color: var(--primary);
+      background: #f0f7ff;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--kpi-color, #64748b);
+    }
+
+    .kpi-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .kpi-value {
+      font-family: 'Prompt', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 2px;
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+    }
+
+    .kpi-sub {
+      font-size: 0.74rem;
+      font-weight: 500;
+      color: var(--text-light);
+    }
+
+    /* Filter Toolbar */
+    .filter-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Quick Status Filter Chips (Scrollable Bar) */
+    .quick-status-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 4px 0 10px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .quick-status-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .status-chip {
+      flex-shrink: 0;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.12s ease;
+      white-space: nowrap;
+      touch-action: manipulation;
+    }
+
+    .status-chip:hover {
+      background: var(--surface-alt);
+    }
+
+    .status-chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(29, 78, 216, 0.28);
+    }
+
+    .status-chip-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--chip-color, #94a3b8);
+    }
+
+    .status-chip.active .status-chip-dot {
+      background: #ffffff;
+    }
+
+    .status-chip-count {
+      font-size: 0.72rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .status-chip.active .status-chip-count {
+      background: rgba(255, 255, 255, 0.24);
+      color: #ffffff;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.1fr 1.1fr 1.1fr 1.1fr 1.4fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    @media (max-width: 1280px) {
+      .filter-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Mobile Quick Search Bar inside Filter Card */
+    .mobile-search-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      flex: 1;
+    }
+
+    .search-input-wrap .input {
+      padding-left: 36px;
+      padding-right: 32px;
+    }
+
+    .search-icon-fixed {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.95rem;
+      color: var(--text-light);
+      pointer-events: none;
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+      display: none;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .input, .select {
+      width: 100%;
+      padding: 9px 12px;
+      font-family: inherit;
+      font-size: 0.95rem; /* Prevents auto-zoom on mobile */
+      color: var(--text);
+      background: #ffffff;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .input:focus, .select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.14);
+    }
+
+    /* =========================================================================
+       Mobile Card View (มือถือเล่นใช้งานง่าย - เรียงแนวตั้ง ไม่ซับซ้อน)
+       ========================================================================= */
+    .card-grid-container {
+      margin-top: 10px;
+      max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .station-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+
+    .station-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: #cbd5e1;
+    }
+
+    .station-card.row-selected {
+      background: #eff6ff;
+      border-color: #93c5fd;
+      outline: 2px solid var(--primary);
+    }
+
+    .station-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .station-card-title-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .station-card-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      word-break: break-word;
+      line-height: 1.35;
+      cursor: pointer;
+    }
+
+    .station-card-name:hover {
+      color: var(--primary);
+    }
+
+    .station-card-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+    }
+
+    .loc-tag {
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Card PM Rounds Flow */
+    .card-rounds-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .card-round-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 4px 0;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .card-round-row:last-child {
+      border-bottom: none;
+    }
+
+    .card-round-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .card-round-label {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-round-date {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .card-status-pill-btn {
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.12s ease;
+      touch-action: manipulation;
+      white-space: nowrap;
+      min-height: 36px;
+    }
+
+    .card-status-pill-btn:active {
+      transform: scale(0.96);
+    }
+
+    .card-status-paint-pill {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .station-card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 2px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Table View Section */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .table-MetaBar {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-alt);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .table-meta-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .table-meta-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.88rem;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      background: #f1f5f9;
+      color: #1e293b;
+      font-weight: 700;
+      text-align: left;
+      padding: 10px 10px;
+      border-bottom: 2px solid var(--border-strong);
+      white-space: nowrap;
+      font-size: 0.82rem;
+    }
+
+    thead th.sticky-col-check {
+      position: sticky;
+      left: 0;
+      z-index: 25;
+      background: #f1f5f9;
+      width: 40px;
+      text-align: center;
+    }
+
+    thead th.sticky-col-station {
+      position: sticky;
+      left: 40px;
+      z-index: 25;
+      background: #f1f5f9;
+      min-width: 210px;
+      box-shadow: 2px 0 5px -2px rgba(15, 23, 42, 0.12);
+    }
+
+    tbody td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      background: #ffffff;
+    }
+
+    tbody tr:hover td {
+      background: #f8fafc;
+    }
+
+    tbody tr.row-selected td {
+      background: #eff6ff;
+    }
+
+    tbody td.sticky-col-check {
+      position: sticky;
+      left: 0;
+      z-index: 10;
+      text-align: center;
+      width: 40px;
+    }
+
+    tbody td.sticky-col-station {
+      position: sticky;
+      left: 40px;
+      z-index: 10;
+      min-width: 210px;
+      box-shadow: 2px 0 5px -2px rgba(15, 23, 42, 0.08);
+    }
+
+    .station-name-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+      text-align: left;
+    }
+    .station-name-btn:hover {
+      text-decoration: underline;
+    }
+
+    .station-loc-sub {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+
+    .row-num-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 20px;
+      font-size: 0.74rem;
+      color: #475569;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 0 5px;
+      margin-right: 6px;
+      font-weight: 700;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .pm-cell-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 175px;
+    }
+
+    .pm-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .paint-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Color-coded Status Select & Buttons */
+    .status-select {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 24px 6px 9px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      background-repeat: no-repeat;
+      background-position: right 7px center;
+      background-size: 12px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23334155'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+      transition: all 0.12s ease;
+    }
+
+    .status-0 { background-color: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+    .status-1 { background-color: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
+    .status-2 { background-color: #fef3c7; color: #b45309; border-color: #fcd34d; }
+    .status-3 { background-color: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+    .status-4 { background-color: #d1fae5; color: #047857; border-color: #6ee7b7; }
+    .status-5 { background-color: #e0e7ff; color: #4338ca; border-color: #a5b4fc; }
+
+    .cell-saving {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* Pagination / Footer Bar */
+    .table-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--surface-alt);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 0.86rem;
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+
+    /* Floating Bulk Update Bar */
+    .bulk-bar {
+      position: fixed;
+      bottom: 74px;
+      left: 50%;
+      transform: translateX(-50%) translateY(160%);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 18px;
+      border-radius: 14px;
+      box-shadow: var(--shadow-lg);
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      max-width: calc(100vw - 24px);
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .bulk-bar.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .bulk-count-pill {
+      background: #2563eb;
+      color: #ffffff;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .bulk-bar .select, .bulk-bar .input {
+      width: auto;
+      min-width: 160px;
+      background: #1e293b;
+      color: #ffffff;
+      border-color: #475569;
+      padding: 7px 10px;
+      font-size: 0.86rem;
+    }
+
+    /* Mobile Bottom Sticky Navigation */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(58px + env(safe-area-inset-bottom));
+      padding-bottom: env(safe-area-inset-bottom);
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -4px 18px rgba(15, 23, 42, 0.08);
+      z-index: 55;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 6px 0;
+      cursor: pointer;
+      position: relative;
+      touch-action: manipulation;
+      transition: color 0.12s ease;
+    }
+
+    .nav-btn.active, .nav-btn:active {
+      color: var(--primary);
+    }
+
+    .nav-btn-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .nav-badge-dot {
+      position: absolute;
+      top: 4px;
+      right: calc(50% - 14px);
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--danger);
+      border: 2px solid #ffffff;
+    }
+
+    .nav-badge-count {
+      position: absolute;
+      top: 2px;
+      right: calc(50% - 18px);
+      background: var(--danger);
+      color: #ffffff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 999px;
+      border: 1px solid #ffffff;
+    }
+
+    /* Modal Backdrop & Dialog (Responsive: Floating on desktop, Bottom-sheet on mobile) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(3px);
+      z-index: 80;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: #ffffff;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 860px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      animation: modalIn 0.18s ease-out;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.97) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 2px;
+      background: #cbd5e1;
+      margin: 8px auto 2px;
+      display: none;
+    }
+
+    .modal-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--surface-alt);
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--text-light);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      touch-action: manipulation;
+    }
+    .modal-close:hover {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+      overflow-y: auto;
+      flex: 1;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      background: var(--surface-alt);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .form-section-title {
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin: 0 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .station-info-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .rounds-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .round-box {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      background: #ffffff;
+    }
+
+    .round-box.paint-box {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    .round-box-header {
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 8px;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .round-box-fields {
+      display: grid;
+      grid-template-columns: 125px 1fr;
+      gap: 10px;
+      align-items: end;
+    }
+
+    /* Quick Date Chips Helper */
+    .quick-date-helper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .date-chip {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #334155;
+    }
+    .date-chip:hover {
+      background: #e2e8f0;
+    }
+
+    /* Quick Status Picker Bottom Sheet */
+    .status-picker-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .status-picker-btn {
+      width: 100%;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.1s ease;
+      touch-action: manipulation;
+      text-align: left;
+    }
+
+    .status-picker-btn:active {
+      transform: scale(0.98);
+    }
+
+    .status-picker-btn.selected {
+      border-color: #0f172a;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Setup Steps & Code Box */
+    .setup-steps {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      font-size: 0.88rem;
+    }
+
+    .setup-steps ol {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .setup-steps li {
+      margin-bottom: 6px;
+    }
+
+    .code-preview {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.78rem;
+      max-height: 160px;
+      overflow: auto;
+      white-space: pre;
+      margin-top: 8px;
+    }
+
+    /* QR Code & Mobile Share Box */
+    .qr-box {
+      text-align: center;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .qr-img {
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 10px;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      padding: 8px;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      top: 72px;
+      right: 16px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+      max-width: calc(100vw - 32px);
+    }
+
+    .toast {
+      pointer-events: auto;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 380px;
+      animation: toastSlide 0.2s ease-out;
+    }
+
+    .toast.success { border-left: 4px solid #10b981; }
+    .toast.error { border-left: 4px solid #ef4444; }
+    .toast.info { border-left: 4px solid #3b82f6; }
+
+    @keyframes toastSlide {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-light);
+    }
+
+    /* Responsive Media Queries for Mobile Screens */
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: calc(76px + env(safe-area-inset-bottom)) !important;
+      }
+
+      .topbar {
+        padding: 10px 14px;
+      }
+
+      .topbar-actions {
+        display: none;
+      }
+
+      .mobile-header-actions {
+        display: flex;
+      }
+
+      .mobile-bottom-nav {
+        display: grid;
+      }
+
+      .filter-grid {
+        display: none; /* Collapsed on mobile, opened via bottom sheet or quick search */
+      }
+
+      .filter-card {
+        padding: 10px 12px;
+      }
+
+      .modal-backdrop {
+        align-items: flex-end !important;
+        padding: 0 !important;
+      }
+
+      .modal {
+        max-height: 92vh !important;
+        border-radius: 20px 20px 0 0 !important;
+        animation: sheetSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+
+      @keyframes sheetSlideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+      }
+
+      .modal-handle {
+        display: block;
+      }
+
+      .station-info-grid, .rounds-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .round-box-fields {
+        grid-template-columns: 1fr;
+      }
+
+      /* จัดรูปแบบรายการรอบ PM ให้เรียงแนวตั้ง อ่านง่ายแตะง่ายบนมือถือ */
+      .card-round-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        padding: 7px 0;
+      }
+
+      .card-round-info {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-status-pill-btn {
+        width: 100%;
+        justify-content: space-between;
+        padding: 8px 12px;
+        font-size: 0.86rem;
+      }
+
+      .bulk-bar {
+        bottom: calc(64px + env(safe-area-inset-bottom));
+        width: calc(100vw - 20px);
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-icon">📡</div>
+        <div class="brand-text">
+          <h1 class="brand-title">
+            <span>สถานะเข้าบำรุงรักษา (PM)</span>
+            <span class="brand-badge" id="headerActiveTabBadge">ลข</span>
+          </h1>
+          <div class="brand-sub" id="lastSyncText" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Desktop Header Actions (ซ่อนปุ่ม เปิดในมือถือ และ เมนู ตามที่ตีกรอบสีแดง) -->
+      <div class="topbar-actions">
+        <div class="view-toggle-wrap">
+          <button type="button" class="view-toggle-btn active" id="btnViewCardDesktop" onclick="setViewMode('card')">📱 แนวตั้ง</button>
+          <button type="button" class="view-toggle-btn" id="btnViewTableDesktop" onclick="setViewMode('table')">📊 แนวนอน (ตาราง)</button>
+        </div>
+
+        <button type="button" class="btn btn-glass" onclick="refreshFromCloud()" id="refreshBtn" title="ดึงข้อมูลล่าสุดจาก Google Sheet">
+          🔄 รีเฟรช
+        </button>
+      </div>
+
+      <!-- Mobile Header Actions -->
+      <div class="mobile-header-actions">
+        <button type="button" class="btn btn-glass btn-sm" id="btnToggleViewMobile" onclick="toggleViewMode()" title="สลับมุมมอง แนวตั้ง/แนวนอน">
+          <span id="mobileViewIcon">📊 แนวนอน</span>
+        </button>
+
+        <button type="button" class="btn btn-glass btn-sm btn-icon" onclick="refreshFromCloud()" title="รีเฟรชข้อมูล">
+          🔄
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Banner for Unsynced Local Edits -->
+    <div id="syncBanner" class="sync-banner">
+      <div class="sync-banner-text" id="syncBannerText">
+        <span>⚠️ มี <strong id="pendingBannerCount">0</strong> รายการบันทึกค้างไว้ในเครื่อง</span>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn btn-primary btn-sm" onclick="syncPendingChanges()">☁️ ซิงค์ขึ้น Google Sheet ทันที</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="discardLocalChanges()">ล้างค่าที่แก้ค้าง</button>
+      </div>
+    </div>
+
+    <!-- Sheet Tabs + Quick View Controls -->
+    <div class="tabs-row">
+      <div class="sheet-tabs" role="tablist">
+        <button type="button" class="sheet-tab active" data-tab="LK" onclick="switchTab('LK')">
+          ลข (สถานีลูกข่าย) <span class="tab-badge" id="badge-LK">0</span>
+        </button>
+        <button type="button" class="sheet-tab" data-tab="BSGW" onclick="switchTab('BSGW')">
+          BS/GW (แม่ข่าย) <span class="tab-badge" id="badge-BSGW">0</span>
+        </button>
+        <button type="button" class="sheet-tab" data-tab="BSSC" onclick="switchTab('BSSC')">
+          BSSC (ศูนย์ควบคุม) <span class="tab-badge" id="badge-BSSC">0</span>
+        </button>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <label class="field-label" for="focusRoundSelect" style="margin:0; font-size:0.82rem;">โฟกัสรอบ PM:</label>
+        <select id="focusRoundSelect" class="select" style="width:auto; min-width:180px; padding:6px 10px; font-size:0.86rem;" onchange="onFocusRoundChange()">
+          <option value="ALL">แสดงครบทุกรอบ PM</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- KPI Summary Section (ยุบไว้เป็นค่าเริ่มต้นเพื่อให้เห็นรายการสถานีได้ทันที ไม่เกะกะสายตา) -->
+    <div class="kpi-header">
+      <div class="kpi-title" onclick="toggleKpiVisibility()" style="cursor:pointer; user-select:none;">
+        <span>📊 สรุปภาพรวมสถานะ</span>
+        <span id="kpiScopeLabel" style="color:var(--primary); font-weight:600;"></span>
+        <span id="kpiToggleBadge" style="font-size:0.75rem; background:#e2e8f0; padding:2px 8px; border-radius:6px; color:#475569; margin-left:6px;">ดูสรุปยอด ▼</span>
+      </div>
+    </div>
+    <div class="kpi-grid" id="kpiGrid" style="display:none;"></div>
+
+    <!-- Search & Filters Toolbar -->
+    <section class="filter-card">
+      <!-- Search Input + Mobile Filter Button -->
+      <div class="mobile-search-row">
+        <div class="search-input-wrap">
+          <span class="search-icon-fixed">🔍</span>
+          <input type="text" id="searchInput" class="input" placeholder="ค้นหาชื่อสถานี, ตำบล, อำเภอ, จังหวัด หรือเลขแถว..." oninput="onFilterChange()" />
+          <button type="button" id="searchClearBtn" class="search-clear-btn" onclick="clearSearchInput()">&times;</button>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="btnOpenMobileFilter" onclick="openMobileFilterModal()">
+          <span>⚙️ ตัวกรอง</span>
+          <span id="mobileFilterActiveBadge" style="display:none; background:var(--primary); color:#ffffff; font-size:0.7rem; padding:1px 6px; border-radius:999px;">0</span>
+        </button>
+      </div>
+
+      <!-- Quick Horizontally Scrollable Status Chips -->
+      <div class="quick-status-bar" id="quickStatusBar"></div>
+
+      <!-- Desktop Filter Grid (Hidden on Mobile, opened in sheet) -->
+      <div class="filter-grid" id="desktopFilterGrid">
+        <div class="field-group">
+          <label class="field-label" for="provinceFilter">จังหวัด</label>
+          <select id="provinceFilter" class="select" onchange="onProvinceFilterChange()">
+            <option value="">ทุกจังหวัด</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" id="districtFilterLabel" for="districtFilter">อำเภอ</label>
+          <select id="districtFilter" class="select" onchange="onDistrictFilterChange()">
+            <option value="">ทุกอำเภอ</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" id="subdistrictFilterLabel" for="subdistrictFilter">ตำบล</label>
+          <select id="subdistrictFilter" class="select" onchange="onFilterChange()">
+            <option value="">ทุกตำบล</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="roundFilter">กรองจากรอบ PM</label>
+          <select id="roundFilter" class="select" onchange="onFilterChange()">
+            <option value="ANY">รอบที่</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="statusFilter">สถานะการดำเนินงาน</label>
+          <select id="statusFilter" class="select" onchange="onFilterChange()">
+            <option value="">ทุกสถานะ</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <button type="button" class="btn btn-outline" onclick="resetFilters()">ล้างตัวกรอง</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meta Toolbar (Counts, Multi-Select, View Mode) -->
+    <div class="table-MetaBar" style="border-radius:var(--radius) var(--radius) 0 0;">
+      <div class="table-meta-left">
+        <span>แสดง <strong id="showingCountText">0</strong> จาก <strong id="totalCountText">0</strong> สถานี</span>
+        <button type="button" class="btn btn-outline btn-sm" onclick="selectAllFiltered()">☑️ เลือกทั้งหมดที่กรอง</button>
+        <button type="button" class="btn btn-outline btn-sm" id="clearSelectionBtn" style="display:none;" onclick="clearSelection()">ยกเลิกที่เลือก</button>
+      </div>
+
+      <div class="table-meta-right">
+        <label style="display:inline-flex; align-items:center; gap:6px; font-size:0.84rem; color:var(--text-muted); cursor:pointer;">
+          <select id="pageSizeSelect" class="select" style="width:auto; padding:4px 8px; font-size:0.82rem;" onchange="onPageSizeChange()">
+            <option value="50">50 รายการ</option>
+            <option value="100">100 รายการ</option>
+            <option value="200" selected>ทั้งหมด (200)</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <!-- 1. Card View Grid (มุมมองการ์ด มือถือเล่นใช้งานง่าย) -->
+    <section id="cardViewSection" class="card-grid-container">
+      <div class="card-grid" id="pmCardGrid"></div>
+    </section>
+
+    <!-- 2. Table View Section (มุมมองตารางแบบละเอียด) -->
+    <section id="tableViewSection" class="table-card" style="display:none; margin-top:0; border-top:none; border-radius:0 0 var(--radius) var(--radius);">
+      <div class="table-scroll">
+        <table id="pmTable">
+          <thead id="pmThead"></thead>
+          <tbody id="pmTbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Shared Pagination Footer -->
+    <div class="table-footer" id="sharedPaginationFooter" style="margin-top:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);">
+      <div id="pageInfoText" style="font-weight:600; color:var(--text-muted);">หน้า 1 / 1</div>
+      <div style="display:flex; gap:6px;">
+        <button type="button" class="btn btn-outline btn-sm" id="prevPageBtn" onclick="changePage(-1)">◀ ก่อนหน้า</button>
+        <button type="button" class="btn btn-outline btn-sm" id="nextPageBtn" onclick="changePage(1)">ถัดไป ▶</button>
+      </div>
+    </div>
+
+    <!-- Clean Footer Actions (เข้าถึงเมนูและการตั้งค่าได้โดยไม่รกแถบด้านบน) -->
+    <div style="text-align:center; padding:24px 12px 10px; color:var(--text-light); font-size:0.82rem; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+      <button type="button" class="btn btn-outline btn-sm" onclick="openMobileMenuModal()">⚙️ เมนูและการตั้งค่า</button>
+      <button type="button" class="btn btn-outline btn-sm" onclick="openQrModal()">📱 เปิดในมือถือ (QR Code)</button>
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Sticky Navigation Bar -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav">
+    <button type="button" class="nav-btn active" id="mNavList" onclick="mobileNavAction('list')">
+      <span class="nav-btn-icon">📋</span>
+      <span>รายการ</span>
+    </button>
+    <button type="button" class="nav-btn" id="mNavFilter" onclick="mobileNavAction('filter')">
+      <span class="nav-btn-icon">🔍</span>
+      <span>ตัวกรอง</span>
+      <span class="nav-badge-dot" id="mNavFilterDot" style="display:none;"></span>
+    </button>
+    <button type="button" class="nav-btn" id="mNavAdd" onclick="mobileNavAction('add')">
+      <span class="nav-btn-icon" style="color:var(--success);">➕</span>
+      <span>เพิ่มสถานี</span>
+    </button>
+    <button type="button" class="nav-btn" id="mNavSync" onclick="mobileNavAction('sync')">
+      <span class="nav-btn-icon">☁️</span>
+      <span id="mNavSyncLabel">ซิงค์ Sheet</span>
+      <span class="nav-badge-count" id="mNavSyncBadge" style="display:none;">0</span>
+    </button>
+    <button type="button" class="nav-btn" id="mNavMenu" onclick="mobileNavAction('menu')">
+      <span class="nav-btn-icon">⚙️</span>
+      <span>เมนู</span>
+    </button>
+  </nav>
+
+  <!-- Floating Bulk Update Bar -->
+  <div id="bulkBar" class="bulk-bar">
+    <span class="bulk-count-pill" id="bulkCountLabel">เลือก 0 สถานี</span>
+    <span style="font-size:0.86rem; color:#cbd5e1;">อัปเดต:</span>
+    <select id="bulkColSelect" class="select" onchange="onBulkColChange()"></select>
+    <div id="bulkValueContainer"></div>
+    <button type="button" class="btn btn-primary btn-sm" id="bulkSaveBtn" onclick="applyBulkUpdate()">💾 บันทึก</button>
+    <button type="button" class="btn btn-glass btn-sm" onclick="clearSelection()">ปิด</button>
+  </div>
+
+  <!-- Quick Status Picker Bottom Sheet (สำหรับเปลี่ยนสถานะใน 1 คลิกบนมือถือ) -->
+  <div id="quickStatusSheet" class="modal-backdrop" onclick="onBackdropClick(event, 'quickStatusSheet')">
+    <div class="modal" role="dialog" aria-modal="true" style="max-width:480px;">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="quickStatusSheetTitle">เลือกสถานะ PM</h3>
+          <div id="quickStatusSheetSub" style="font-size:0.82rem; color:var(--text-light); margin-top:2px;"></div>
+        </div>
+        <button type="button" class="modal-close" onclick="closeModal('quickStatusSheet')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="status-picker-grid" id="quickStatusOptions"></div>
+      </div>
+
+      <div class="modal-footer" style="justify-content:center;">
+        <button type="button" class="btn btn-outline" style="width:100%;" onclick="closeModal('quickStatusSheet')">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Filter Bottom Sheet -->
+  <div id="mobileFilterModal" class="modal-backdrop" onclick="onBackdropClick(event, 'mobileFilterModal')">
+    <div class="modal" role="dialog" aria-modal="true" style="max-width:540px;">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">🔍 ตัวกรองสถานี</h3>
+          <div style="font-size:0.82rem; color:var(--text-light);">กรองตามพื้นที่หรือรอบ PM</div>
+        </div>
+        <button type="button" class="modal-close" onclick="closeModal('mobileFilterModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="field-group">
+            <label class="field-label" for="mFilterProvince">จังหวัด</label>
+            <select id="mFilterProvince" class="select" onchange="syncMobileProvinceFilter()">
+              <option value="">ทุกจังหวัด</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" id="mFilterDistrictLabel" for="mFilterDistrict">อำเภอ</label>
+            <select id="mFilterDistrict" class="select" onchange="syncMobileDistrictFilter()">
+              <option value="">ทุกอำเภอ</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" id="mFilterSubdistrictLabel" for="mFilterSubdistrict">ตำบล</label>
+            <select id="mFilterSubdistrict" class="select" onchange="syncMobileSubdistrictFilter()">
+              <option value="">ทุกตำบล</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="mFilterRound">รอบ PM</label>
+            <select id="mFilterRound" class="select" onchange="syncMobileRoundFilter()">
+              <option value="ANY">รอบที่</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="mFilterStatus">สถานะการดำเนินงาน</label>
+            <select id="mFilterStatus" class="select" onchange="syncMobileStatusFilter()">
+              <option value="">ทุกสถานะ</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="resetFilters(); closeModal('mobileFilterModal');">ล้างตัวกรอง</button>
+        <button type="button" class="btn btn-primary" onclick="closeModal('mobileFilterModal');">ดูผลลัพธ์ (<span id="mFilterResultCount">0</span>)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu & Actions Bottom Sheet -->
+  <div id="mobileMenuModal" class="modal-backdrop" onclick="onBackdropClick(event, 'mobileMenuModal')">
+    <div class="modal" role="dialog" aria-modal="true" style="max-width:520px;">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">⚙️ เมนูและการตั้งค่า</h3>
+          <div style="font-size:0.82rem; color:var(--text-light);">สลับแท็บ, แชร์ลิงก์ และเชื่อมต่อ Google Sheet</div>
+        </div>
+        <button type="button" class="modal-close" onclick="closeModal('mobileMenuModal')">&times;</button>
+      </div>
+
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:14px;">
+        <div>
+          <div class="field-label" style="margin-bottom:6px;">📁 เลือกชีตที่ต้องการทำงาน:</div>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px;">
+            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabLK" onclick="switchTab('LK'); closeModal('mobileMenuModal');">ลข (<span id="mMenuCountLK">0</span>)</button>
+            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabBSGW" onclick="switchTab('BSGW'); closeModal('mobileMenuModal');">BS/GW (<span id="mMenuCountBSGW">0</span>)</button>
+            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabBSSC" onclick="switchTab('BSSC'); closeModal('mobileMenuModal');">BSSC (<span id="mMenuCountBSSC">0</span>)</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="field-label" style="margin-bottom:6px;">📱 มุมมองการแสดงผล:</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="setViewMode('card'); closeModal('mobileMenuModal');">📱 มุมมองแนวตั้ง (การ์ดมือถือ)</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="setViewMode('table'); closeModal('mobileMenuModal');">📊 มุมมองแนวนอน (ตาราง)</button>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--border); padding-top:12px; display:flex; flex-direction:column; gap:8px;">
+          <button type="button" class="btn btn-success" onclick="closeModal('mobileMenuModal'); openAddStationModal();" style="justify-content:flex-start;">
+            <span>➕ เพิ่มสถานีใหม่ในชีตนี้</span>
+          </button>
+          <button type="button" class="btn btn-primary" onclick="closeModal('mobileMenuModal'); openSetupModal();" style="justify-content:flex-start;">
+            <span>☁️ ตั้งค่าผูกบันทึก Google Sheet (GAS Web App)</span>
+          </button>
+          <button type="button" class="btn btn-outline" onclick="closeModal('mobileMenuModal'); openQrModal();" style="justify-content:flex-start;">
+            <span>📱 สร้าง QR Code & แชร์ลิงก์เข้ามือถือ</span>
+          </button>
+          <button type="button" class="btn btn-outline" onclick="closeModal('mobileMenuModal'); exportCurrentTabCsv();" style="justify-content:flex-start;">
+            <span>📥 ส่งออกข้อมูลเป็น CSV (Excel ภาษาไทย)</span>
+          </button>
+          <a id="mMenuOpenSheetLink" href="https://docs.google.com/spreadsheets/d/1TJM3PnV12H__uoCv2VuwtfbceSRfmR3l4lq81xq8vJE/edit?gid=475478333#gid=475478333" target="_blank" rel="noopener" class="btn btn-outline" style="justify-content:flex-start;">
+            <span>↗ เปิดไฟล์ Google Sheet จริง</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content:center;">
+        <button type="button" class="btn btn-outline" style="width:100%;" onclick="closeModal('mobileMenuModal')">ปิดเมนู</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Code & Mobile Share Modal -->
+  <div id="qrModal" class="modal-backdrop" onclick="onBackdropClick(event, 'qrModal')">
+    <div class="modal" role="dialog" aria-modal="true" style="max-width:480px;">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">📱 ใช้งานบนมือถือสะดวกรวดเร็ว</h3>
+          <div style="font-size:0.82rem; color:var(--text-light);">สแกน QR Code เพื่อเปิดระบบบนมือถือ</div>
+        </div>
+        <button type="button" class="modal-close" onclick="closeModal('qrModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="qr-box">
+          <img id="qrImageEl" class="qr-img" alt="QR Code สำหรับเปิดบนมือถือ" />
+          <div style="font-size:0.86rem; color:var(--text-muted); font-weight:600;">
+            สแกนด้วยกล้องมือถือ (หรือ LINE) เพื่อเปิดใช้งานทันที
+          </div>
+          <div style="font-size:0.78rem; color:var(--text-light); margin-top:4px;" id="qrSyncNote">
+            (ระบบได้แนบลิงก์ซิงค์ Google Sheet ไปด้วยแล้ว ไม่ต้องตั้งค่าซ้ำบนมือถือ)
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">🔗 ลิงก์สำหรับส่งต่อให้ทีมงาน (เปิดได้บนมือถือทันที):</label>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="shareUrlInput" class="input" readonly style="font-size:0.82rem; background:#f8fafc;" />
+            <button type="button" class="btn btn-primary btn-sm" onclick="copyShareUrl()">📋 คัดลอก</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content:center;">
+        <button type="button" class="btn btn-outline" style="width:100%;" onclick="closeModal('qrModal')">ปิดหน้าต่าง</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Station Edit / Add Modal (Touch-Friendly Bottom Sheet on Mobile) -->
+  <div id="stationModal" class="modal-backdrop" onclick="onBackdropClick(event, 'stationModal')">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="stationModalTitle">กรอก/แก้ไขข้อมูลสถานี</h2>
+          <div id="stationModalSub" style="font-size:0.82rem; color:var(--text-light); margin-top:2px;"></div>
+        </div>
+        <button type="button" class="modal-close" onclick="closeModal('stationModal')">&times;</button>
+      </div>
+
+      <form id="stationForm" onsubmit="saveStationForm(event)" style="display:contents;">
+        <div class="modal-body">
+          <div class="form-section-title">
+            <span>📍 ข้อมูลที่ตั้งสถานี</span>
+            <label id="unlockStationWrap" style="font-family:'Sarabun',sans-serif; font-size:0.82rem; font-weight:600; color:var(--text-muted); display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="unlockStationCheck" onchange="toggleStationFieldsLock()" />
+              ปลดล็อกแก้ไขชื่อ/ที่ตั้ง
+            </label>
+          </div>
+
+          <div class="station-info-grid">
+            <div class="field-group">
+              <label class="field-label" for="formStationName">ชื่อสถานี *</label>
+              <input type="text" id="formStationName" class="input" required placeholder="เช่น หมู่ 13 หนองจิกน้ำดำ" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" id="formSubdistrictLabel" for="formSubdistrict">ตำบล</label>
+              <input type="text" id="formSubdistrict" class="input" list="dlSubdistricts" placeholder="ระบุตำบล/แขวง" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" id="formDistrictLabel" for="formDistrict">อำเภอ</label>
+              <input type="text" id="formDistrict" class="input" list="dlDistricts" placeholder="ระบุอำเภอ/เขต" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="formProvince">จังหวัด</label>
+              <input type="text" id="formProvince" class="input" list="dlProvinces" placeholder="ระบุจังหวัด" />
+            </div>
+          </div>
+
+          <datalist id="dlProvinces"></datalist>
+          <datalist id="dlDistricts"></datalist>
+          <datalist id="dlSubdistricts"></datalist>
+
+          <div class="form-section-title">
+            <span>🛠️ แผนงานและสถานะการบำรุงรักษา (รูปแบบ ดด/ปปปป พ.ศ.)</span>
+          </div>
+
+          <!-- Quick Date Helper Chips -->
+          <div style="background:#f1f5f9; padding:8px 12px; border-radius:8px; margin-bottom:12px;">
+            <div style="font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:4px;">⚡ แตะเพื่อใส่เดือน/ปีในช่องที่โฟกัสอยู่ด่วน:</div>
+            <div class="quick-date-helper">
+              <span style="font-size:0.75rem; color:var(--text-light); margin-right:2px;">ปี พ.ศ.:</span>
+              <button type="button" class="date-chip" onclick="quickApplyYear('2570')">2570</button>
+              <button type="button" class="date-chip" onclick="quickApplyYear('2571')">2571</button>
+              <button type="button" class="date-chip" onclick="quickApplyYear('2572')">2572</button>
+              <button type="button" class="date-chip" onclick="quickApplyYear('2573')">2573</button>
+              <button type="button" class="date-chip" onclick="quickApplyYear('2574')">2574</button>
+              <span style="font-size:0.75rem; color:var(--text-light); margin-left:6px; margin-right:2px;">เดือน:</span>
+              <button type="button" class="date-chip" onclick="quickApplyMonth('02')">ก.พ. (02)</button>
+              <button type="button" class="date-chip" onclick="quickApplyMonth('06')">มิ.ย. (06)</button>
+              <button type="button" class="date-chip" onclick="quickApplyMonth('07')">ก.ค. (07)</button>
+              <button type="button" class="date-chip" onclick="quickApplyMonth('08')">ส.ค. (08)</button>
+            </div>
+          </div>
+
+          <div class="rounds-form-grid" id="modalRoundsGrid"></div>
+        </div>
+
+        <div class="modal-footer">
+          <div>
+            <button type="button" id="deleteStationBtn" class="btn btn-danger-outline btn-sm" onclick="confirmDeleteStation()" style="display:none;">
+              🗑️ ลบสถานีนี้
+            </button>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('stationModal')">ยกเลิก</button>
+            <button type="submit" class="btn btn-primary" id="saveStationSubmitBtn">💾 บันทึกข้อมูล</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Google Apps Script Setup Modal -->
+  <div id="setupModal" class="modal-backdrop" onclick="onBackdropClick(event, 'setupModal')">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">⚙️ ตั้งค่าเชื่อมต่อบันทึกข้อมูลลง Google Sheet จริง</h2>
+          <div style="font-size:0.82rem; color:var(--text-light); margin-top:2px;">
+            ตั้งค่าครั้งเดียว เพื่อให้หน้าเว็บซิงค์ข้อมูลกลับเข้าไฟล์ Google Sheet ได้โดยตรง
+          </div>
+        </div>
+        <button type="button" class="modal-close" onclick="closeModal('setupModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field-group" style="margin-bottom:16px;">
+          <label class="field-label" for="gasUrlInput" style="font-size:0.9rem; color:var(--text);">
+            🔗 วาง Web App URL จาก Google Apps Script (ลงท้ายด้วย <code>/exec</code>)
+          </label>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <input type="url" id="gasUrlInput" class="input" style="flex:1; min-width:260px;" placeholder="https://script.google.com/macros/s/AKfycb.../exec" />
+            <button type="button" class="btn btn-primary" onclick="saveAndTestGasUrl()" id="testGasBtn">บันทึกและทดสอบ</button>
+            <button type="button" class="btn btn-outline" onclick="clearGasUrl()">ล้าง URL</button>
+          </div>
+          <div id="gasTestResult" style="font-size:0.84rem; margin-top:6px;"></div>
+        </div>
+
+        <div class="setup-steps">
+          <strong>ขั้นตอนติดตั้ง Apps Script (ทำครั้งเดียวประมาณ 1 นาที):</strong>
+          <ol>
+            <li>
+              เปิดไฟล์ <a href="https://docs.google.com/spreadsheets/d/1TJM3PnV12H__uoCv2VuwtfbceSRfmR3l4lq81xq8vJE/edit#gid=475478333" target="_blank" rel="noopener"><strong>Google Sheet (PM Plan)</strong></a> &rarr; เมนูด้านบน <strong>ส่วนขยาย (Extensions) &rarr; Apps Script</strong>
+            </li>
+            <li>
+              ลบโค้ดเดิมใน <code>Code.gs</code> ออก แล้วกดปุ่ม <strong>"คัดลอกโค้ด Code.gs"</strong> ด้านล่างไปวางแทนที่ แล้วกดบันทึก (<code>Ctrl + S</code>)
+            </li>
+            <li>
+              กดปุ่มสีน้ำเงิน <strong>ทำให้ใช้งานได้ (Deploy) &rarr; การทำให้ใช้งานได้รายการใหม่ (New deployment)</strong>
+            </li>
+            <li>
+              เลือกประเภท <strong>เว็บแอป (Web app)</strong> ตั้งค่า:
+              <br />• ดำเนินการในฐานะ (Execute as): <strong>ฉัน (Me)</strong>
+              <br />• ผู้ที่มีสิทธิ์เข้าถึง (Who has access): <strong>ทุกคน (Anyone)</strong>
+            </li>
+            <li>
+              กด <strong>Deploy</strong> &rarr; อนุญาตสิทธิ์ &rarr; คัดลอก <strong>URL ของเว็บแอป (ลงท้ายด้วย /exec)</strong> มาวางในช่องด้านบน
+            </li>
+          </ol>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:12px; gap:8px; flex-wrap:wrap;">
+            <span style="font-weight:700; font-size:0.84rem;">โค้ดสำหรับวางใน Apps Script:</span>
+            <button type="button" class="btn btn-outline btn-sm" onclick="copyCodeGs()">📋 คัดลอกโค้ด Code.gs</button>
+          </div>
+          <pre class="code-preview" id="codeGsPreview"></pre>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span style="font-size:0.82rem; color:var(--text-light);">หมายเหตุ: หากยังไม่ผูก URL ข้อมูลที่แก้จะถูกบันทึกสำรองในเครื่องและส่งออก CSV ได้ทันที</span>
+        <button type="button" class="btn btn-outline" onclick="closeModal('setupModal')">ปิดหน้าต่าง</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Initial Offline Snapshot -->
+  <script src="pm-data.js"></script>
+
+  <script>
+    // =========================================================================
+    // Configuration & Constants
+    // =========================================================================
+    const SPREADSHEET_ID = '1TJM3PnV12H__uoCv2VuwtfbceSRfmR3l4lq81xq8vJE';
+    const STORAGE_KEY_GAS_URL = 'pm_plan_gas_webapp_url_v1';
+    const STORAGE_KEY_PENDING = 'pm_plan_pending_changes_v1';
+    const STORAGE_KEY_VIEW_MODE = 'pm_plan_view_mode_v2';
+
+    const STATUS_OPTIONS = [
+      'รอดำเนินการ',
+      'ส่งหนังสือแจ้งแผนงานเรียบร้อย',
+      'อยู่ระหว่างดำเนินการ',
+      'พบปัญหา / รอดำเนินการแก้ไข',
+      'ดำเนินการแล้วเสร็จ',
+      'เอกสารจัดทำแล้วเสร็จ'
+    ];
+
+    const STATUS_META = {
+      'รอดำเนินการ': { idx: 0, color: '#64748b', short: 'รอดำเนินการ', icon: '⚪' },
+      'ส่งหนังสือแจ้งแผนงานเรียบร้อย': { idx: 1, color: '#0284c7', short: 'ส่งหนังสือแจ้งแล้ว', icon: '🔵' },
+      'อยู่ระหว่างดำเนินการ': { idx: 2, color: '#d97706', short: 'อยู่ระหว่างทำ', icon: '🟡' },
+      'พบปัญหา / รอดำเนินการแก้ไข': { idx: 3, color: '#dc2626', short: 'พบปัญหา/รอแก้ไข', icon: '🔴' },
+      'ดำเนินการแล้วเสร็จ': { idx: 4, color: '#059669', short: 'ดำเนินการเสร็จ', icon: '🟢' },
+      'เอกสารจัดทำแล้วเสร็จ': { idx: 5, color: '#4f46e5', short: 'เอกสารแล้วเสร็จ', icon: '🟣' }
+    };
+
+    const TAB_SCHEMAS = {
+      LK: {
+        key: 'LK',
+        title: 'ลข (สถานีลูกข่าย)',
+        short: 'ลข',
+        gid: '475478333',
+        activeCols: 15,
+        locLabels: { sub: 'ตำบล', dist: 'อำเภอ', prov: 'จังหวัด' },
+        rounds: [
+          { id: 'R1', label: 'ครั้งที่ 1', dateCol: 4, statusCol: 5, defaultDate: '08/2570' },
+          { id: 'R2', label: 'ครั้งที่ 2', dateCol: 6, statusCol: 7, defaultDate: '08/2571' },
+          { id: 'R3', label: 'ครั้งที่ 3', dateCol: 8, statusCol: 9, defaultDate: '08/2572' },
+          { id: 'R4', label: 'ครั้งที่ 4', dateCol: 10, statusCol: 11, defaultDate: '08/2573' },
+          { id: 'PAINT', label: 'ซ่อมแซมทาสีโครงสร้างเสา', dateCol: 12, statusCol: null, defaultDate: '06/2574', isPaint: true },
+          { id: 'R5', label: 'ครั้งที่ 5', dateCol: 13, statusCol: 14, defaultDate: '07/2574' }
+        ]
+      },
+      BSGW: {
+        key: 'BSGW',
+        title: 'BS/GW (แม่ข่าย/เกตเวย์)',
+        short: 'BS/GW',
+        gid: '1755639936',
+        activeCols: 25,
+        locLabels: { sub: 'ตำบล', dist: 'อำเภอ', prov: 'จังหวัด' },
+        rounds: [
+          { id: 'R1', label: 'ครั้งที่ 1', dateCol: 4, statusCol: 5, defaultDate: '02/2570' },
+          { id: 'R2', label: 'ครั้งที่ 2', dateCol: 6, statusCol: 7, defaultDate: '08/2570' },
+          { id: 'R3', label: 'ครั้งที่ 3', dateCol: 8, statusCol: 9, defaultDate: '02/2571' },
+          { id: 'R4', label: 'ครั้งที่ 4', dateCol: 10, statusCol: 11, defaultDate: '08/2571' },
+          { id: 'R5', label: 'ครั้งที่ 5', dateCol: 12, statusCol: 13, defaultDate: '02/2572' },
+          { id: 'R6', label: 'ครั้งที่ 6', dateCol: 14, statusCol: 15, defaultDate: '08/2572' },
+          { id: 'R7', label: 'ครั้งที่ 7', dateCol: 16, statusCol: 17, defaultDate: '02/2573' },
+          { id: 'R8', label: 'ครั้งที่ 8', dateCol: 18, statusCol: 19, defaultDate: '08/2573' },
+          { id: 'R9', label: 'ครั้งที่ 9', dateCol: 20, statusCol: 21, defaultDate: '02/2574' },
+          { id: 'PAINT', label: 'ซ่อมแซมทาสีโครงสร้างเสา', dateCol: 22, statusCol: null, defaultDate: '06/2574', isPaint: true },
+          { id: 'R10', label: 'ครั้งที่ 10', dateCol: 23, statusCol: 24, defaultDate: '07/2574' }
+        ]
+      },
+      BSSC: {
+        key: 'BSSC',
+        title: 'BSSC (ศูนย์ควบคุม)',
+        short: 'BSSC',
+        gid: '0',
+        activeCols: 24,
+        locLabels: { sub: 'แขวง', dist: 'เขต', prov: 'จังหวัด' },
+        rounds: [
+          { id: 'R1', label: 'ครั้งที่ 1', dateCol: 4, statusCol: 5, defaultDate: '02/2570' },
+          { id: 'R2', label: 'ครั้งที่ 2', dateCol: 6, statusCol: 7, defaultDate: '08/2570' },
+          { id: 'R3', label: 'ครั้งที่ 3', dateCol: 8, statusCol: 9, defaultDate: '02/2571' },
+          { id: 'R4', label: 'ครั้งที่ 4', dateCol: 10, statusCol: 11, defaultDate: '08/2571' },
+          { id: 'R5', label: 'ครั้งที่ 5', dateCol: 12, statusCol: 13, defaultDate: '02/2572' },
+          { id: 'R6', label: 'ครั้งที่ 6', dateCol: 14, statusCol: 15, defaultDate: '08/2572' },
+          { id: 'R7', label: 'ครั้งที่ 7', dateCol: 16, statusCol: 17, defaultDate: '02/2573' },
+          { id: 'R8', label: 'ครั้งที่ 8', dateCol: 18, statusCol: 19, defaultDate: '08/2573' },
+          { id: 'R9', label: 'ครั้งที่ 9', dateCol: 20, statusCol: 21, defaultDate: '02/2574' },
+          { id: 'R10', label: 'ครั้งที่ 10', dateCol: 22, statusCol: 23, defaultDate: '07/2574' }
+        ]
+      }
+    };
+
+    // =========================================================================
+    // Application State
+    // =========================================================================
+    let appData = deepClone(window.INITIAL_PM_DATA || { LK: { headers: [], rows: [] }, BSGW: { headers: [], rows: [] }, BSSC: { headers: [], rows: [] } });
+    let activeTab = 'LK';
+    let focusRoundId = 'ALL';
+    let currentPage = 1;
+    let pageSize = 200;
+    let selectedRows = new Set();
+    let editingMode = 'edit'; // 'edit' | 'add'
+    let editingSheetRow = null;
+    let gasUrl = (localStorage.getItem(STORAGE_KEY_GAS_URL) || '').trim();
+    let pendingLocalOps = loadPendingOps();
+
+    // Default to 'card' (แนวตั้ง / การ์ดมือถือ), or retrieve saved preference
+    const isMobileDevice = window.innerWidth <= 768;
+    let viewMode = localStorage.getItem(STORAGE_KEY_VIEW_MODE) || 'card';
+
+    let activeQuickStatusTarget = null;
+    let lastFocusedDateInput = null;
+
+    // =========================================================================
+    // Utility Helpers
+    // =========================================================================
+    function deepClone(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+
+    function escapeHtml(str) {
+      return String(str === null || str === undefined ? '' : str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function normalizeDateInput(val) {
+      const s = String(val || '').trim();
+      const m = s.match(/^(\d{1,2})\/(\d{4})$/);
+      if (m) {
+        const mm = m[1].padStart(2, '0');
+        return `${mm}/${m[2]}`;
+      }
+      return s;
+    }
+
+    function getStatusClass(statusText) {
+      const meta = STATUS_META[String(statusText || '').trim()];
+      return meta ? `status-${meta.idx}` : 'status-0';
+    }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transition = 'opacity 0.25s ease';
+        setTimeout(() => el.remove(), 260);
+      }, 3400);
+    }
+
+    function formatThaiTime(dateObj) {
+      return dateObj.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    // =========================================================================
+    // View Mode Management (📱 การ์ด vs 📊 ตาราง)
+    // =========================================================================
+    function setViewMode(mode) {
+      viewMode = mode;
+      localStorage.setItem(STORAGE_KEY_VIEW_MODE, mode);
+
+      const isCard = (mode === 'card');
+      document.getElementById('cardViewSection').style.display = isCard ? 'block' : 'none';
+      document.getElementById('tableViewSection').style.display = isCard ? 'none' : 'block';
+
+      // Update button highlights
+      ['btnViewCardDesktop', 'btnViewCardSub'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('active', isCard);
+      });
+      ['btnViewTableDesktop', 'btnViewTableSub'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('active', !isCard);
+      });
+
+      const mobileIcon = document.getElementById('mobileViewIcon');
+      if (mobileIcon) {
+        mobileIcon.textContent = isCard ? '📊 แนวนอน' : '📱 แนวตั้ง';
+      }
+
+      renderCurrentView();
+    }
+
+    function toggleViewMode() {
+      setViewMode(viewMode === 'card' ? 'table' : 'card');
+      showToast(`เปลี่ยนเป็นมุมมอง ${viewMode === 'card' ? 'แนวตั้ง (การ์ดมือถือ)' : 'แนวนอน (ตาราง)'}`, 'info');
+    }
+
+    // =========================================================================
+    // Pending Local Changes & Offline Storage
+    // =========================================================================
+    function loadPendingOps() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_PENDING);
+        return raw ? JSON.parse(raw) : { edits: {}, added: {} };
+      } catch (_) {
+        return { edits: {}, added: {} };
+      }
+    }
+
+    function savePendingOps() {
+      localStorage.setItem(STORAGE_KEY_PENDING, JSON.stringify(pendingLocalOps));
+      updatePendingBanner();
+    }
+
+    function countPendingOps() {
+      let total = 0;
+      Object.values(pendingLocalOps.edits || {}).forEach(tabMap => {
+        total += Object.keys(tabMap || {}).length;
+      });
+      Object.values(pendingLocalOps.added || {}).forEach(arr => {
+        total += (arr || []).length;
+      });
+      return total;
+    }
+
+    function applyPendingOverlaysToData() {
+      ['LK', 'BSGW', 'BSSC'].forEach(tabKey => {
+        const sheetObj = appData[tabKey];
+        if (!sheetObj || !Array.isArray(sheetObj.rows)) return;
+        const tabEdits = (pendingLocalOps.edits && pendingLocalOps.edits[tabKey]) || {};
+        sheetObj.rows.forEach(r => {
+          if (tabEdits[r.sheetRow]) {
+            r.cells = tabEdits[r.sheetRow].slice();
+          }
+        });
+        const tabAdded = (pendingLocalOps.added && pendingLocalOps.added[tabKey]) || [];
+        tabAdded.forEach(addedRow => {
+          if (!sheetObj.rows.some(r => r.sheetRow === addedRow.sheetRow)) {
+            sheetObj.rows.push(deepClone(addedRow));
+          }
+        });
+      });
+    }
+
+    function recordLocalRowEdit(tabKey, sheetRow, cells) {
+      if (!pendingLocalOps.edits[tabKey]) pendingLocalOps.edits[tabKey] = {};
+      const addedList = pendingLocalOps.added[tabKey] || [];
+      const addedItem = addedList.find(x => x.sheetRow === sheetRow && x.isLocalNew);
+      if (addedItem) {
+        addedItem.cells = cells.slice();
+      } else {
+        pendingLocalOps.edits[tabKey][sheetRow] = cells.slice();
+      }
+      savePendingOps();
+    }
+
+    function recordLocalRowAdd(tabKey, rowObj) {
+      if (!pendingLocalOps.added[tabKey]) pendingLocalOps.added[tabKey] = [];
+      pendingLocalOps.added[tabKey].push(deepClone(rowObj));
+      savePendingOps();
+    }
+
+    function updatePendingBanner() {
+      const banner = document.getElementById('syncBanner');
+      const count = countPendingOps();
+      const countEl = document.getElementById('pendingBannerCount');
+      if (countEl) countEl.textContent = count;
+
+      if (banner) {
+        banner.classList.toggle('visible', count > 0);
+      }
+
+      // Mobile bottom nav sync badge
+      const mBadge = document.getElementById('mNavSyncBadge');
+      if (mBadge) {
+        mBadge.style.display = count > 0 ? 'inline-block' : 'none';
+        mBadge.textContent = count;
+      }
+
+      updateConnectionPill();
+    }
+
+    async function discardLocalChanges() {
+      if (!confirm('ยืนยันล้างรายการที่แก้ไขค้างไว้ในเครื่อง และโหลดข้อมูลจริงจาก Google Sheet ใหม่?')) return;
+      pendingLocalOps = { edits: {}, added: {} };
+      savePendingOps();
+      await refreshFromCloud();
+      showToast('ล้างรายการค้างในเครื่องและโหลดข้อมูลล่าสุดแล้ว', 'info');
+    }
+
+    let autoSyncTimer = null;
+    let isAutoSyncing = false;
+
+    function startAutoSync() {
+      if (autoSyncTimer) clearInterval(autoSyncTimer);
+      autoSyncTimer = setInterval(autoSyncTick, 10000); // ซิงค์อัตโนมัติทุกๆ 10 วินาที
+    }
+
+    function updateSyncStatusText(text) {
+      const el = document.getElementById('lastSyncText');
+      if (el) el.innerHTML = text;
+    }
+
+    async function autoSyncTick() {
+      if (isAutoSyncing) return;
+      if (!gasUrl) {
+        updateSyncStatusText('⚪ โหมดในเครื่อง (แตะ "เมนู" เพื่อผูก Google Sheet)');
+        return;
+      }
+
+      const pendingCount = countPendingOps();
+      if (pendingCount > 0) {
+        isAutoSyncing = true;
+        updateSyncStatusText(`🔄 กำลังซิงค์อัตโนมัติ (${pendingCount} รายการ)...`);
+        try {
+          await syncPendingChanges(true);
+          updateSyncStatusText(`🟢 ซิงค์อัตโนมัติทุก 10 วิ • ล่าสุด: ${formatThaiTime(new Date())} น.`);
+        } catch (err) {
+          updateSyncStatusText(`⚠️ ซิงค์อัตโนมัติรอส่งข้อมูล (${err.message})`);
+        } finally {
+          isAutoSyncing = false;
+        }
+      } else {
+        const hasOpenModal = document.querySelector('.modal-backdrop.open');
+        if (!hasOpenModal) {
+          try {
+            await refreshFromCloud(true);
+            updateSyncStatusText(`🟢 ซิงค์อัตโนมัติทุก 10 วิ • ล่าสุด: ${formatThaiTime(new Date())} น.`);
+          } catch (_) {}
+        }
+      }
+    }
+
+    async function syncPendingChanges(silent = false) {
+      if (!gasUrl) {
+        if (!silent) {
+          openSetupModal();
+          showToast('กรุณาวางลิงก์ Web App URL ก่อนส่งข้อมูลขึ้น Google Sheet', 'info');
+        }
+        return;
+      }
+      const total = countPendingOps();
+      if (total === 0) {
+        if (!silent) showToast('ไม่มีรายการค้าง ข้อมูลตรงกับ Google Sheet แล้ว', 'info');
+        return;
+      }
+
+      try {
+        if (!silent) showToast('กำลังซิงค์ข้อมูลขึ้น Google Sheet...', 'info');
+        for (const tabKey of ['LK', 'BSGW', 'BSSC']) {
+          const tabEdits = pendingLocalOps.edits[tabKey] || {};
+          const rowKeys = Object.keys(tabEdits);
+          if (rowKeys.length > 0) {
+            const updates = rowKeys.map(rk => {
+              const cells = tabEdits[rk];
+              const changes = {};
+              cells.forEach((v, idx) => { changes[idx] = v; });
+              return { sheetRow: parseInt(rk, 10), changes };
+            });
+            await callGasPost({ action: 'bulkUpdate', tab: tabKey, updates });
+          }
+
+          const tabAdded = pendingLocalOps.added[tabKey] || [];
+          for (const item of tabAdded) {
+            await callGasPost({ action: 'addRow', tab: tabKey, cells: item.cells });
+          }
+        }
+
+        pendingLocalOps = { edits: {}, added: {} };
+        savePendingOps();
+        await refreshFromCloud(true);
+        if (!silent) showToast('ส่งรายการแก้ไขทั้งหมดขึ้น Google Sheet สำเร็จ!', 'success');
+        updateSyncStatusText(`🟢 ซิงค์อัตโนมัติทุก 10 วิ • ล่าสุด: ${formatThaiTime(new Date())} น.`);
+      } catch (err) {
+        if (!silent) showToast('ซิงค์ไม่สำเร็จ: ' + err.message, 'error');
+        updateSyncStatusText(`⚠️ ซิงค์ไม่สำเร็จ (${err.message})`);
+        throw err;
+      }
+    }
+
+    // =========================================================================
+    // Cloud Sync (Google Visualization JSONP + GAS Web App API)
+    // =========================================================================
+    function updateConnectionPill() {
+      const pendingCount = countPendingOps();
+      if (gasUrl) {
+        if (pendingCount > 0) {
+          updateSyncStatusText(`🟡 รอซิงค์อัตโนมัติ (${pendingCount} รายการ)...`);
+        } else {
+          updateSyncStatusText(`🟢 ซิงค์อัตโนมัติทุก 10 วิ • ล่าสุด: ${formatThaiTime(new Date())} น.`);
+        }
+      } else {
+        updateSyncStatusText(`⚪ โหมดในเครื่อง (แตะ "เมนู" เพื่อผูก Google Sheet)`);
+      }
+    }
+
+    async function callGasPost(payload) {
+      if (!gasUrl) throw new Error('ยังไม่ได้ตั้งค่า Web App URL');
+      const res = await fetch(gasUrl, {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'omit',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!data || !data.ok) {
+        throw new Error((data && data.error) ? data.error : 'Apps Script ตอบกลับผิดพลาด');
+      }
+      return data;
+    }
+
+    async function fetchSheetViaGvizJsonp(tabKey) {
+      const schema = TAB_SCHEMAS[tabKey];
+      return new Promise((resolve, reject) => {
+        const cbName = '__pmGvizCb_' + tabKey + '_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+        const script = document.createElement('script');
+        const timer = setTimeout(() => {
+          cleanup();
+          reject(new Error('หมดเวลาเชื่อมต่อ Google Sheet'));
+        }, 12000);
+
+        function cleanup() {
+          clearTimeout(timer);
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+        }
+
+        window[cbName] = function(resp) {
+          cleanup();
+          if (!resp || resp.status !== 'ok' || !resp.table) {
+            reject(new Error('ไม่สามารถอ่านตาราง ' + schema.title));
+            return;
+          }
+          const headers = [];
+          for (let i = 0; i < schema.activeCols; i++) {
+            const col = resp.table.cols[i];
+            headers.push(col && col.label ? String(col.label) : '');
+          }
+          const rows = [];
+          let rowNum = 2;
+          (resp.table.rows || []).forEach(r => {
+            const vals = [];
+            for (let i = 0; i < schema.activeCols; i++) {
+              const cell = r.c ? r.c[i] : null;
+              if (!cell) vals.push('');
+              else if (cell.f !== undefined && cell.f !== null && cell.f !== '') vals.push(String(cell.f));
+              else if (cell.v !== undefined && cell.v !== null) vals.push(String(cell.v));
+              else vals.push('');
+            }
+            if (vals.some(v => v.trim() !== '')) {
+              rows.push({ sheetRow: rowNum, cells: vals });
+            }
+            rowNum++;
+          });
+          resolve({
+            key: tabKey,
+            name: schema.title,
+            gid: schema.gid,
+            headers,
+            rows
+          });
+        };
+
+        script.onerror = function() {
+          cleanup();
+          reject(new Error('เชื่อมต่อเครือข่ายเพื่ออ่าน Google Sheet ไม่ได้'));
+        };
+
+        script.src = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=responseHandler:${cbName}&gid=${schema.gid}&_ts=${Date.now()}`;
+        document.body.appendChild(script);
+      });
+    }
+
+    async function refreshFromCloud(silent = false) {
+      const refreshBtn = document.getElementById('refreshBtn');
+      const syncText = document.getElementById('lastSyncText');
+      if (refreshBtn) refreshBtn.disabled = true;
+
+      try {
+        if (gasUrl) {
+          const res = await fetch(`${gasUrl}${gasUrl.includes('?') ? '&' : '?'}action=getAll&_ts=${Date.now()}`, {
+            method: 'GET',
+            mode: 'cors',
+            credentials: 'omit',
+            redirect: 'follow'
+          });
+          const json = await res.json();
+          if (!json || !json.ok || !json.sheets) {
+            throw new Error((json && json.error) || 'อ่านข้อมูลผ่าน Apps Script ไม่สำเร็จ');
+          }
+          appData = json.sheets;
+          applyPendingOverlaysToData();
+          if (syncText) syncText.textContent = `ซิงค์กับ Google Sheet: ${formatThaiTime(new Date())} น.`;
+          if (!silent) showToast('ดึงข้อมูลล่าสุดจาก Google Sheet สำเร็จ', 'success');
+        } else {
+          const [lk, bsgw, bssc] = await Promise.all([
+            fetchSheetViaGvizJsonp('LK'),
+            fetchSheetViaGvizJsonp('BSGW'),
+            fetchSheetViaGvizJsonp('BSSC')
+          ]);
+          appData = { LK: lk, BSGW: bsgw, BSSC: bssc };
+          applyPendingOverlaysToData();
+          if (syncText) syncText.textContent = `อ่านข้อมูลสดจาก Sheet: ${formatThaiTime(new Date())} น.`;
+          if (!silent) showToast('อัปเดตข้อมูลสดจาก Google Sheet แล้ว', 'success');
+        }
+      } catch (err) {
+        applyPendingOverlaysToData();
+        if (syncText) syncText.textContent = `ใช้ข้อมูลในเครื่อง (${err.message})`;
+        if (!silent) showToast('ใช้ข้อมูลในเครื่องชั่วคราว: ' + err.message, 'error');
+      } finally {
+        if (refreshBtn) refreshBtn.disabled = false;
+        renderAll();
+      }
+    }
+
+    // =========================================================================
+    // UI Rendering & Filtering
+    // =========================================================================
+    function updateTabBadges() {
+      ['LK', 'BSGW', 'BSSC'].forEach(k => {
+        const count = (appData[k] && appData[k].rows) ? appData[k].rows.length : 0;
+        const el = document.getElementById('badge-' + k);
+        if (el) el.textContent = count;
+        const mEl = document.getElementById('mMenuCount' + k);
+        if (mEl) mEl.textContent = count;
+      });
+
+      const headerTab = document.getElementById('headerActiveTabBadge');
+      if (headerTab) {
+        const schema = TAB_SCHEMAS[activeTab];
+        headerTab.textContent = schema ? schema.short : activeTab;
+      }
+    }
+
+    function switchTab(tabKey) {
+      if (!TAB_SCHEMAS[tabKey]) return;
+      activeTab = tabKey;
+      focusRoundId = 'ALL';
+      currentPage = 1;
+      selectedRows.clear();
+
+      document.querySelectorAll('.sheet-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabKey);
+      });
+
+      const schema = TAB_SCHEMAS[tabKey];
+      const link = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/edit?gid=${schema.gid}#gid=${schema.gid}`;
+      const openSheetLink = document.getElementById('openSheetLink');
+      if (openSheetLink) openSheetLink.href = link;
+      const mMenuLink = document.getElementById('mMenuOpenSheetLink');
+      if (mMenuLink) mMenuLink.href = link;
+
+      const dLabel = document.getElementById('districtFilterLabel');
+      if (dLabel) dLabel.textContent = schema.locLabels.dist;
+      const sLabel = document.getElementById('subdistrictFilterLabel');
+      if (sLabel) sLabel.textContent = schema.locLabels.sub;
+      const mdLabel = document.getElementById('mFilterDistrictLabel');
+      if (mdLabel) mdLabel.textContent = schema.locLabels.dist;
+      const msLabel = document.getElementById('mFilterSubdistrictLabel');
+      if (msLabel) msLabel.textContent = schema.locLabels.sub;
+
+      populateRoundSelectors();
+      resetFilters(false);
+      renderAll();
+    }
+
+    function populateRoundSelectors() {
+      const schema = TAB_SCHEMAS[activeTab];
+      const focusSel = document.getElementById('focusRoundSelect');
+      const roundFilterSel = document.getElementById('roundFilter');
+      const mFilterRound = document.getElementById('mFilterRound');
+      const bulkColSel = document.getElementById('bulkColSelect');
+
+      focusSel.innerHTML = '<option value="ALL">แสดงครบทุกรอบ PM</option>';
+      roundFilterSel.innerHTML = '<option value="ANY">รอบที่</option>';
+      if (mFilterRound) mFilterRound.innerHTML = '<option value="ANY">รอบที่</option>';
+      bulkColSel.innerHTML = '';
+
+      schema.rounds.forEach(r => {
+        const optFocus = document.createElement('option');
+        optFocus.value = r.id;
+        optFocus.textContent = r.isPaint ? `เฉพาะ ${r.label}` : `เฉพาะ ${r.label}`;
+        focusSel.appendChild(optFocus);
+
+        if (r.statusCol !== null) {
+          const optFilter = document.createElement('option');
+          optFilter.value = r.id;
+          optFilter.textContent = r.label;
+          roundFilterSel.appendChild(optFilter);
+
+          if (mFilterRound) {
+            const optM = document.createElement('option');
+            optM.value = r.id;
+            optM.textContent = r.label;
+            mFilterRound.appendChild(optM);
+          }
+
+          const optBulkStatus = document.createElement('option');
+          optBulkStatus.value = `${r.statusCol}|status`;
+          optBulkStatus.textContent = `${r.label} - สถานะ`;
+          bulkColSel.appendChild(optBulkStatus);
+        }
+
+        const optBulkDate = document.createElement('option');
+        optBulkDate.value = `${r.dateCol}|date`;
+        optBulkDate.textContent = `${r.label} - เดือน/ปี`;
+        bulkColSel.appendChild(optBulkDate);
+      });
+
+      onBulkColChange();
+    }
+
+    function populateStatusFilter() {
+      const sel = document.getElementById('statusFilter');
+      const mSel = document.getElementById('mFilterStatus');
+      sel.innerHTML = '<option value="">ทุกสถานะ</option>';
+      if (mSel) mSel.innerHTML = '<option value="">ทุกสถานะ</option>';
+
+      STATUS_OPTIONS.forEach(st => {
+        const opt = document.createElement('option');
+        opt.value = st;
+        opt.textContent = st;
+        sel.appendChild(opt);
+
+        if (mSel) {
+          const optM = document.createElement('option');
+          optM.value = st;
+          optM.textContent = st;
+          mSel.appendChild(optM);
+        }
+      });
+    }
+
+    function populateLocationFilters() {
+      const schema = TAB_SCHEMAS[activeTab];
+      const rows = (appData[activeTab] && appData[activeTab].rows) || [];
+      const provSel = document.getElementById('provinceFilter');
+      const distSel = document.getElementById('districtFilter');
+      const subSel = document.getElementById('subdistrictFilter');
+      const mProv = document.getElementById('mFilterProvince');
+      const mDist = document.getElementById('mFilterDistrict');
+      const mSub = document.getElementById('mFilterSubdistrict');
+
+      const curProv = provSel.value;
+      const curDist = distSel.value;
+      const curSub = subSel.value;
+
+      const provinces = Array.from(new Set(rows.map(r => (r.cells[3] || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'th'));
+      provSel.innerHTML = '<option value="">ทุกจังหวัด</option>';
+      if (mProv) mProv.innerHTML = '<option value="">ทุกจังหวัด</option>';
+      provinces.forEach(p => {
+        const o = document.createElement('option');
+        o.value = p; o.textContent = p;
+        provSel.appendChild(o);
+        if (mProv) {
+          const om = document.createElement('option');
+          om.value = p; om.textContent = p;
+          mProv.appendChild(om);
+        }
+      });
+      if (provinces.includes(curProv)) {
+        provSel.value = curProv;
+        if (mProv) mProv.value = curProv;
+      }
+
+      const rowsByProv = provSel.value
+        ? rows.filter(r => (r.cells[3] || '').trim() === provSel.value)
+        : rows;
+
+      const districts = Array.from(new Set(rowsByProv.map(r => (r.cells[2] || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'th'));
+      distSel.innerHTML = `<option value="">ทุก${schema.locLabels.dist}</option>`;
+      if (mDist) mDist.innerHTML = `<option value="">ทุก${schema.locLabels.dist}</option>`;
+      districts.forEach(d => {
+        const o = document.createElement('option');
+        o.value = d; o.textContent = d;
+        distSel.appendChild(o);
+        if (mDist) {
+          const om = document.createElement('option');
+          om.value = d; om.textContent = d;
+          mDist.appendChild(om);
+        }
+      });
+      if (districts.includes(curDist)) {
+        distSel.value = curDist;
+        if (mDist) mDist.value = curDist;
+      }
+
+      const rowsByDist = distSel.value
+        ? rowsByProv.filter(r => (r.cells[2] || '').trim() === distSel.value)
+        : rowsByProv;
+
+      const subdistricts = Array.from(new Set(rowsByDist.map(r => (r.cells[1] || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'th'));
+      subSel.innerHTML = `<option value="">ทุก${schema.locLabels.sub}</option>`;
+      if (mSub) mSub.innerHTML = `<option value="">ทุก${schema.locLabels.sub}</option>`;
+      subdistricts.forEach(s => {
+        const o = document.createElement('option');
+        o.value = s; o.textContent = s;
+        subSel.appendChild(o);
+        if (mSub) {
+          const om = document.createElement('option');
+          om.value = s; om.textContent = s;
+          mSub.appendChild(om);
+        }
+      });
+      if (subdistricts.includes(curSub)) {
+        subSel.value = curSub;
+        if (mSub) mSub.value = curSub;
+      }
+    }
+
+    function onProvinceFilterChange() {
+      document.getElementById('districtFilter').value = '';
+      document.getElementById('subdistrictFilter').value = '';
+      currentPage = 1;
+      populateLocationFilters();
+      renderKPIsAndTable();
+    }
+
+    function onDistrictFilterChange() {
+      document.getElementById('subdistrictFilter').value = '';
+      currentPage = 1;
+      populateLocationFilters();
+      renderKPIsAndTable();
+    }
+
+    function syncMobileProvinceFilter() {
+      document.getElementById('provinceFilter').value = document.getElementById('mFilterProvince').value;
+      onProvinceFilterChange();
+      updateMobileFilterBadge();
+    }
+    function syncMobileDistrictFilter() {
+      document.getElementById('districtFilter').value = document.getElementById('mFilterDistrict').value;
+      onDistrictFilterChange();
+      updateMobileFilterBadge();
+    }
+    function syncMobileSubdistrictFilter() {
+      document.getElementById('subdistrictFilter').value = document.getElementById('mFilterSubdistrict').value;
+      onFilterChange();
+      updateMobileFilterBadge();
+    }
+    function syncMobileRoundFilter() {
+      document.getElementById('roundFilter').value = document.getElementById('mFilterRound').value;
+      onFilterChange();
+      updateMobileFilterBadge();
+    }
+    function syncMobileStatusFilter() {
+      document.getElementById('statusFilter').value = document.getElementById('mFilterStatus').value;
+      onFilterChange();
+      updateMobileFilterBadge();
+    }
+
+    function updateMobileFilterBadge() {
+      let activeCount = 0;
+      if (document.getElementById('provinceFilter').value) activeCount++;
+      if (document.getElementById('districtFilter').value) activeCount++;
+      if (document.getElementById('subdistrictFilter').value) activeCount++;
+      if (document.getElementById('roundFilter').value !== 'ANY') activeCount++;
+      if (document.getElementById('statusFilter').value) activeCount++;
+
+      const badge = document.getElementById('mobileFilterActiveBadge');
+      const dot = document.getElementById('mNavFilterDot');
+      if (badge) {
+        badge.style.display = activeCount > 0 ? 'inline-block' : 'none';
+        badge.textContent = activeCount;
+      }
+      if (dot) {
+        dot.style.display = activeCount > 0 ? 'block' : 'none';
+      }
+
+      const resCount = document.getElementById('mFilterResultCount');
+      if (resCount) {
+        resCount.textContent = getFilteredRows(false).length;
+      }
+    }
+
+    function onFilterChange() {
+      currentPage = 1;
+      const searchVal = document.getElementById('searchInput').value;
+      const clearBtn = document.getElementById('searchClearBtn');
+      if (clearBtn) clearBtn.style.display = searchVal ? 'block' : 'none';
+
+      updateMobileFilterBadge();
+      renderKPIsAndTable();
+    }
+
+    function clearSearchInput() {
+      document.getElementById('searchInput').value = '';
+      onFilterChange();
+      document.getElementById('searchInput').focus();
+    }
+
+    function onFocusRoundChange() {
+      focusRoundId = document.getElementById('focusRoundSelect').value;
+      renderKPIsAndTable();
+    }
+
+    function resetFilters(shouldRender = true) {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('provinceFilter').value = '';
+      document.getElementById('districtFilter').value = '';
+      document.getElementById('subdistrictFilter').value = '';
+      document.getElementById('roundFilter').value = 'ANY';
+      document.getElementById('statusFilter').value = '';
+
+      const mProv = document.getElementById('mFilterProvince');
+      if (mProv) mProv.value = '';
+      const mDist = document.getElementById('mFilterDistrict');
+      if (mDist) mDist.value = '';
+      const mSub = document.getElementById('mFilterSubdistrict');
+      if (mSub) mSub.value = '';
+      const mRound = document.getElementById('mFilterRound');
+      if (mRound) mRound.value = 'ANY';
+      const mStatus = document.getElementById('mFilterStatus');
+      if (mStatus) mStatus.value = '';
+
+      currentPage = 1;
+      populateLocationFilters();
+      updateMobileFilterBadge();
+      if (shouldRender) renderKPIsAndTable();
+    }
+
+    function getFilteredRows(ignoreStatusFilter = false) {
+      const schema = TAB_SCHEMAS[activeTab];
+      const rows = (appData[activeTab] && appData[activeTab].rows) || [];
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const prov = document.getElementById('provinceFilter').value;
+      const dist = document.getElementById('districtFilter').value;
+      const sub = document.getElementById('subdistrictFilter').value;
+      const roundId = document.getElementById('roundFilter').value;
+      const statusVal = ignoreStatusFilter ? '' : document.getElementById('statusFilter').value;
+
+      const statusRounds = schema.rounds.filter(r => r.statusCol !== null);
+
+      return rows.filter(r => {
+        const c = r.cells;
+        if (prov && (c[3] || '').trim() !== prov) return false;
+        if (dist && (c[2] || '').trim() !== dist) return false;
+        if (sub && (c[1] || '').trim() !== sub) return false;
+
+        if (q) {
+          const hay = `${c[0] || ''} ${c[1] || ''} ${c[2] || ''} ${c[3] || ''} ${r.sheetRow} ${r.sheetRow - 1}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+
+        if (statusVal) {
+          if (roundId !== 'ANY') {
+            const targetRound = statusRounds.find(sr => sr.id === roundId);
+            if (targetRound && (c[targetRound.statusCol] || '').trim() !== statusVal) return false;
+          } else {
+            const matchAny = statusRounds.some(sr => (c[sr.statusCol] || '').trim() === statusVal);
+            if (!matchAny) return false;
+          }
+        }
+        return true;
+      });
+    }
+
+    function renderKPIs() {
+      const schema = TAB_SCHEMAS[activeTab];
+      const baseRows = getFilteredRows(true);
+      const roundFilterVal = document.getElementById('roundFilter').value;
+      const activeStatusFilter = document.getElementById('statusFilter').value;
+
+      const statusRounds = schema.rounds.filter(r => r.statusCol !== null);
+      let kpiRounds = statusRounds;
+      let scopeText = `(${schema.short} - รวมทุกรอบ PM)`;
+
+      if (roundFilterVal !== 'ANY') {
+        const found = statusRounds.find(r => r.id === roundFilterVal);
+        if (found) {
+          kpiRounds = [found];
+          scopeText = `(${schema.short} - ${found.label})`;
+        }
+      } else if (focusRoundId !== 'ALL') {
+        const found = statusRounds.find(r => r.id === focusRoundId);
+        if (found) {
+          kpiRounds = [found];
+          scopeText = `(${schema.short} - ${found.label})`;
+        }
+      }
+
+      document.getElementById('kpiScopeLabel').textContent = scopeText;
+
+      const counts = {};
+      STATUS_OPTIONS.forEach(s => { counts[s] = 0; });
+      let totalSlots = 0;
+
+      baseRows.forEach(r => {
+        kpiRounds.forEach(kr => {
+          const st = (r.cells[kr.statusCol] || 'รอดำเนินการ').trim();
+          counts[st] = (counts[st] || 0) + 1;
+          totalSlots++;
+        });
+      });
+
+      const doneCount = counts['ดำเนินการแล้วเสร็จ'] || 0;
+      document.getElementById('kpiScopeLabel').textContent = `${scopeText} • รวม ${baseRows.length} สถานี (เสร็จ ${doneCount})`;
+
+      const unitWord = kpiRounds.length === 1 ? 'สถานี' : 'รอบ';
+      const grid = document.getElementById('kpiGrid');
+      let html = `
+        <div class="kpi-card ${activeStatusFilter === '' ? 'active-filter' : ''}" style="--kpi-color:#1d4ed8;" onclick="quickFilterStatus('')">
+          <div class="kpi-label">ทั้งหมดในตัวกรอง</div>
+          <div class="kpi-value">${baseRows.length} <span class="kpi-sub">สถานี</span></div>
+        </div>
+      `;
+
+      STATUS_OPTIONS.forEach(st => {
+        const meta = STATUS_META[st];
+        const c = counts[st] || 0;
+        const isActive = activeStatusFilter === st;
+        html += `
+          <div class="kpi-card ${isActive ? 'active-filter' : ''}" style="--kpi-color:${meta.color};" onclick="quickFilterStatus('${escapeHtml(st)}')" title="${escapeHtml(st)}">
+            <div class="kpi-label">${meta.icon} ${escapeHtml(meta.short)}</div>
+            <div class="kpi-value">${c} <span class="kpi-sub">${unitWord}</span></div>
+          </div>
+        `;
+      });
+      grid.innerHTML = html;
+
+      // Also render horizontal scrollable status chips
+      renderQuickStatusChips(counts, baseRows.length);
+    }
+
+    function renderQuickStatusChips(counts, totalBase) {
+      const activeStatusFilter = document.getElementById('statusFilter').value;
+      const bar = document.getElementById('quickStatusBar');
+      if (!bar) return;
+
+      let chipsHtml = `
+        <button type="button" class="status-chip ${activeStatusFilter === '' ? 'active' : ''}" onclick="quickFilterStatus('')">
+          <span>ทั้งหมด</span>
+          <span class="status-chip-count">${totalBase}</span>
+        </button>
+      `;
+
+      STATUS_OPTIONS.forEach(st => {
+        const meta = STATUS_META[st];
+        const c = counts[st] || 0;
+        const isActive = (activeStatusFilter === st);
+        chipsHtml += `
+          <button type="button" class="status-chip ${isActive ? 'active' : ''}" style="--chip-color:${meta.color};" onclick="quickFilterStatus('${escapeHtml(st)}')">
+            <span class="status-chip-dot"></span>
+            <span>${escapeHtml(meta.short)}</span>
+            <span class="status-chip-count">${c}</span>
+          </button>
+        `;
+      });
+      bar.innerHTML = chipsHtml;
+    }
+
+    function quickFilterStatus(statusStr) {
+      const sel = document.getElementById('statusFilter');
+      sel.value = (sel.value === statusStr) ? '' : statusStr;
+      currentPage = 1;
+      updateMobileFilterBadge();
+      renderKPIsAndTable();
+    }
+
+    function toggleKpiVisibility() {
+      const grid = document.getElementById('kpiGrid');
+      const badge = document.getElementById('kpiToggleBadge');
+      if (!grid) return;
+      const isHidden = (grid.style.display === 'none' || getComputedStyle(grid).display === 'none');
+      if (isHidden) {
+        grid.style.display = (window.innerWidth <= 768) ? 'flex' : 'grid';
+        if (badge) badge.textContent = 'ย่อสรุป ▲';
+      } else {
+        grid.style.display = 'none';
+        if (badge) badge.textContent = 'ดูสรุปยอด ▼';
+      }
+    }
+
+    // =========================================================================
+    // Core Render Function: Card View + Table View Unified
+    // =========================================================================
+    function renderCurrentView() {
+      if (viewMode === 'card') {
+        renderCards();
+      } else {
+        renderTable();
+      }
+    }
+
+    function renderKPIsAndTable() {
+      renderKPIs();
+      renderCurrentView();
+    }
+
+    function renderAll() {
+      updateConnectionPill();
+      updateTabBadges();
+      populateLocationFilters();
+      renderKPIsAndTable();
+    }
+
+    // =========================================================================
+    // 1. Render Mobile Card View (ออกแบบเพื่อสัมผัสและใช้งานบนมือถืออย่างสมบูรณ์แบบ)
+    // =========================================================================
+    function renderCards() {
+      const schema = TAB_SCHEMAS[activeTab];
+      const allTabRows = (appData[activeTab] && appData[activeTab].rows) || [];
+      const filtered = getFilteredRows(false);
+
+      document.getElementById('totalCountText').textContent = allTabRows.length;
+      document.getElementById('showingCountText').textContent = filtered.length;
+
+      const visibleRounds = focusRoundId === 'ALL'
+        ? schema.rounds
+        : schema.rounds.filter(r => r.id === focusRoundId);
+
+      // Pagination
+      const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const startIdx = (currentPage - 1) * pageSize;
+      const pageRows = filtered.slice(startIdx, startIdx + pageSize);
+
+      document.getElementById('pageInfoText').textContent =
+        `หน้า ${currentPage} จาก ${totalPages} (แสดง ${filtered.length ? startIdx + 1 : 0} - ${startIdx + pageRows.length})`;
+      document.getElementById('prevPageBtn').disabled = currentPage <= 1;
+      document.getElementById('nextPageBtn').disabled = currentPage >= totalPages;
+
+      const cardGrid = document.getElementById('pmCardGrid');
+      if (pageRows.length === 0) {
+        cardGrid.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <div style="font-size:2.5rem; margin-bottom:8px;">🔍</div>
+            <div style="font-weight:600; font-size:1.05rem; color:var(--text);">ไม่พบสถานีที่ตรงกับเงื่อนไข</div>
+            <div style="font-size:0.86rem; color:var(--text-light); margin-top:4px;">ลองเปลี่ยนคำค้นหา หรือกดปุ่ม "ล้างตัวกรอง"</div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="resetFilters()">ล้างตัวกรองทั้งหมด</button>
+          </div>
+        `;
+        updateSelectionUI();
+        return;
+      }
+
+      const cardsHtml = pageRows.map((r, idx) => {
+        const itemSeq = startIdx + idx + 1;
+        const c = r.cells;
+        const checked = selectedRows.has(r.sheetRow);
+        const stationName = c[0] || '(ไม่ระบุชื่อสถานี)';
+        const locParts = [
+          c[1] ? `${schema.locLabels.sub === 'แขวง' ? 'แขวง' : 'ต.'}${c[1]}` : '',
+          c[2] ? `${schema.locLabels.dist === 'เขต' ? 'เขต' : 'อ.'}${c[2]}` : '',
+          c[3] ? `จ.${c[3]}` : ''
+        ].filter(Boolean).join(' ');
+
+        // Render PM Rounds
+        let roundsHtml = '';
+        if (visibleRounds.length === 1) {
+          const rd = visibleRounds[0];
+          const dateVal = c[rd.dateCol] || '-';
+          if (rd.isPaint) {
+            roundsHtml = `
+              <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-weight:700; color:#92400e; font-size:0.95rem;">🎨 ${escapeHtml(rd.label)}</div>
+                  <div style="font-size:0.84rem; color:#b45309; margin-top:2px;">กำหนดการ: ${escapeHtml(dateVal)}</div>
+                </div>
+                <span class="card-status-paint-pill">ทาสีเสา</span>
+              </div>
+            `;
+          } else {
+            const stVal = (c[rd.statusCol] || 'รอดำเนินการ').trim();
+            const stClass = getStatusClass(stVal);
+            const meta = STATUS_META[stVal] || { icon: '⚪', short: stVal };
+            roundsHtml = `
+              <div style="background:#f8fafc; border:1px solid var(--border); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-weight:700; font-size:0.92rem; color:var(--primary);">📌 ${escapeHtml(rd.label)}</span>
+                  <span style="font-size:0.82rem; font-weight:600; color:var(--text-light);">📅 ${escapeHtml(dateVal)}</span>
+                </div>
+                <button type="button" class="card-status-pill-btn ${stClass}" style="width:100%; justify-content:space-between; padding:10px 14px; font-size:0.95rem; border-radius:10px;"
+                  onclick="openQuickStatusSheet(${r.sheetRow}, ${rd.statusCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(stVal)}')">
+                  <span style="display:flex; align-items:center; gap:8px;">
+                    <span>${meta.icon}</span>
+                    <span style="font-weight:700;">${escapeHtml(stVal)}</span>
+                  </span>
+                  <span style="font-size:0.75rem; opacity:0.65;">แตะเพื่อเปลี่ยน ▼</span>
+                </button>
+              </div>
+            `;
+          }
+        } else {
+          roundsHtml = '<div class="card-rounds-box">';
+          visibleRounds.forEach(rd => {
+            const dateVal = c[rd.dateCol] || '-';
+            if (rd.isPaint) {
+              roundsHtml += `
+                <div class="card-round-row">
+                  <div class="card-round-info">
+                    <span class="card-round-label">🎨 ${escapeHtml(rd.label)}</span>
+                    <span class="card-round-date">กำหนดการ: ${escapeHtml(dateVal)}</span>
+                  </div>
+                  <div>
+                    <span class="card-status-paint-pill">ทาสีเสา</span>
+                  </div>
+                </div>
+              `;
+            } else {
+              const stVal = (c[rd.statusCol] || 'รอดำเนินการ').trim();
+              const stClass = getStatusClass(stVal);
+              const meta = STATUS_META[stVal] || { icon: '⚪', short: stVal };
+
+              roundsHtml += `
+                <div class="card-round-row">
+                  <div class="card-round-info">
+                    <span class="card-round-label">${escapeHtml(rd.label)}</span>
+                    <span class="card-round-date">📅 ${escapeHtml(dateVal)}</span>
+                  </div>
+                  <div>
+                    <button type="button" class="card-status-pill-btn ${stClass}"
+                      onclick="openQuickStatusSheet(${r.sheetRow}, ${rd.statusCol}, '${escapeHtml(rd.label)}', '${escapeHtml(stationName)}', '${escapeHtml(stVal)}')">
+                      <span>${meta.icon}</span>
+                      <span>${escapeHtml(stVal)}</span>
+                      <span style="font-size:0.7rem; opacity:0.6;">▼</span>
+                    </button>
+                  </div>
+                </div>
+              `;
+            }
+          });
+          roundsHtml += '</div>';
+        }
+
+        const mapsQuery = encodeURIComponent(`${stationName} ${c[1] || ''} ${c[2] || ''} ${c[3] || ''}`);
+
+        return `
+          <div class="station-card ${checked ? 'row-selected' : ''}" id="card-row-${r.sheetRow}">
+            <div class="station-card-top">
+              <div class="station-card-title-row">
+                <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleRowSelect(${r.sheetRow}, this.checked)" style="width:20px; height:20px; cursor:pointer; accent-color:var(--primary);" />
+                <span class="row-num-tag" title="ลำดับที่ ${itemSeq} (แถว ${r.sheetRow} ใน Google Sheet)">${itemSeq}</span>
+                <div class="station-card-name" onclick="openEditStationModal(${r.sheetRow})">${escapeHtml(stationName)}</div>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" onclick="openEditStationModal(${r.sheetRow})" title="แก้ไขข้อมูลสถานี">
+                ✏️
+              </button>
+            </div>
+
+            <div class="station-card-meta">
+              <span class="loc-tag">📍 ${escapeHtml(locParts || 'ไม่ระบุที่ตั้ง')}</span>
+            </div>
+
+            <div class="card-rounds-box">
+              ${roundsHtml}
+            </div>
+
+            <div class="station-card-actions">
+              <button type="button" class="btn btn-outline btn-sm" onclick="openEditStationModal(${r.sheetRow})" style="flex:1;">
+                ✏️ แก้ไขข้อมูลสถานี
+              </button>
+              <a href="https://www.google.com/maps/search/?api=1&query=${mapsQuery}" target="_blank" rel="noopener" class="btn btn-outline btn-sm" style="color:var(--text-muted);" title="เปิดดูใน Google Maps">
+                🗺️ แผนที่
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      cardGrid.innerHTML = cardsHtml;
+      updateSelectionUI();
+    }
+
+    // =========================================================================
+    // 2. Render Desktop Table View
+    // =========================================================================
+    function renderTable() {
+      const schema = TAB_SCHEMAS[activeTab];
+      const allTabRows = (appData[activeTab] && appData[activeTab].rows) || [];
+      const filtered = getFilteredRows(false);
+
+      document.getElementById('totalCountText').textContent = allTabRows.length;
+      document.getElementById('showingCountText').textContent = filtered.length;
+
+      const visibleRounds = focusRoundId === 'ALL'
+        ? schema.rounds
+        : schema.rounds.filter(r => r.id === focusRoundId);
+
+      const thead = document.getElementById('pmThead');
+      let headHtml = `
+        <tr>
+          <th class="sticky-col-check">
+            <input type="checkbox" id="headerCheckAll" onchange="togglePageCheckAll(this.checked)" title="เลือกในหน้านี้ทั้งหมด" />
+          </th>
+          <th class="sticky-col-station">สถานี / ที่ตั้ง</th>
+      `;
+      visibleRounds.forEach(r => {
+        headHtml += `<th>${escapeHtml(r.label)}</th>`;
+      });
+      headHtml += `<th style="text-align:center;">จัดการ</th></tr>`;
+      thead.innerHTML = headHtml;
+
+      const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const startIdx = (currentPage - 1) * pageSize;
+      const pageRows = filtered.slice(startIdx, startIdx + pageSize);
+
+      document.getElementById('pageInfoText').textContent =
+        `หน้า ${currentPage} จาก ${totalPages} (แถว ${filtered.length ? startIdx + 1 : 0} - ${startIdx + pageRows.length})`;
+      document.getElementById('prevPageBtn').disabled = currentPage <= 1;
+      document.getElementById('nextPageBtn').disabled = currentPage >= totalPages;
+
+      const tbody = document.getElementById('pmTbody');
+      if (pageRows.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="${visibleRounds.length + 3}" class="empty-state">
+              ไม่พบรายการสถานีที่ตรงกับเงื่อนไขการค้นหา
+            </td>
+          </tr>
+        `;
+        updateSelectionUI();
+        return;
+      }
+
+      const rowsHtml = pageRows.map((r, idx) => {
+        const itemSeq = startIdx + idx + 1;
+        const c = r.cells;
+        const checked = selectedRows.has(r.sheetRow);
+        const locParts = [
+          c[1] ? `${schema.locLabels.sub === 'แขวง' ? 'แขวง' : 'ต.'}${c[1]}` : '',
+          c[2] ? `${schema.locLabels.dist === 'เขต' ? 'เขต' : 'อ.'}${c[2]}` : '',
+          c[3] ? `จ.${c[3]}` : ''
+        ].filter(Boolean).join(' ');
+
+        let roundColsHtml = '';
+        visibleRounds.forEach(rd => {
+          const dateVal = c[rd.dateCol] || '-';
+          if (rd.isPaint) {
+            roundColsHtml += `
+              <td>
+                <span class="paint-badge" title="กำหนดการซ่อมแซมทาสีโครงสร้างเสา">🎨 ${escapeHtml(dateVal)}</span>
+              </td>
+            `;
+          } else {
+            const stVal = (c[rd.statusCol] || 'รอดำเนินการ').trim();
+            const stClass = getStatusClass(stVal);
+            const optsHtml = STATUS_OPTIONS.map(opt =>
+              `<option value="${escapeHtml(opt)}" ${opt === stVal ? 'selected' : ''}>${escapeHtml(opt)}</option>`
+            ).join('');
+
+            roundColsHtml += `
+              <td>
+                <div class="pm-cell-wrap">
+                  <span class="pm-date-badge">📅 ${escapeHtml(dateVal)}</span>
+                  <select class="status-select ${stClass}"
+                    aria-label="${escapeHtml(rd.label)} ของ ${escapeHtml(c[0])}"
+                    onchange="onInlineStatusChange(${r.sheetRow}, ${rd.statusCol}, this)">
+                    ${optsHtml}
+                  </select>
+                </div>
+              </td>
+            `;
+          }
+        });
+
+        return `
+          <tr class="${checked ? 'row-selected' : ''}" id="tr-row-${r.sheetRow}">
+            <td class="sticky-col-check">
+              <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleRowSelect(${r.sheetRow}, this.checked)" />
+            </td>
+            <td class="sticky-col-station">
+              <div>
+                <span class="row-num-tag" title="ลำดับที่ ${itemSeq} (แถว ${r.sheetRow} ใน Google Sheet)">${itemSeq}</span>
+                <button type="button" class="station-name-btn" onclick="openEditStationModal(${r.sheetRow})">
+                  ${escapeHtml(c[0] || '(ไม่ระบุชื่อสถานี)')}
+                </button>
+              </div>
+              <div class="station-loc-sub">${escapeHtml(locParts)}</div>
+            </td>
+            ${roundColsHtml}
+            <td style="text-align:center; white-space:nowrap;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="openEditStationModal(${r.sheetRow})">
+                ✏️ กรอก/แก้ไข
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      tbody.innerHTML = rowsHtml;
+
+      const allPageSelected = pageRows.length > 0 && pageRows.every(r => selectedRows.has(r.sheetRow));
+      const hdrCheck = document.getElementById('headerCheckAll');
+      if (hdrCheck) hdrCheck.checked = allPageSelected;
+
+      updateSelectionUI();
+    }
+
+    function onPageSizeChange() {
+      pageSize = parseInt(document.getElementById('pageSizeSelect').value, 10);
+      currentPage = 1;
+      renderCurrentView();
+    }
+
+    function changePage(delta) {
+      currentPage += delta;
+      renderCurrentView();
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    // =========================================================================
+    // Quick Status Picker Bottom Sheet Logic (มือถือเล่นง่ายแตะเปลี่ยนทันที)
+    // =========================================================================
+    function openQuickStatusSheet(sheetRow, colIndex, roundLabel, stationName, curStatus) {
+      activeQuickStatusTarget = { sheetRow, colIndex, roundLabel, stationName, curStatus };
+      document.getElementById('quickStatusSheetTitle').textContent = `เลือกสถานะ: ${roundLabel}`;
+      document.getElementById('quickStatusSheetSub').textContent = stationName;
+
+      const container = document.getElementById('quickStatusOptions');
+      container.innerHTML = STATUS_OPTIONS.map(opt => {
+        const meta = STATUS_META[opt];
+        const stClass = getStatusClass(opt);
+        const isSel = (opt === curStatus);
+        return `
+          <button type="button" class="status-picker-btn ${stClass} ${isSel ? 'selected' : ''}" onclick="applyQuickStatusSelection('${escapeHtml(opt)}')">
+            <span style="display:flex; align-items:center; gap:8px;">
+              <span>${meta.icon}</span>
+              <span>${escapeHtml(opt)}</span>
+            </span>
+            <span>${isSel ? '✓' : ''}</span>
+          </button>
+        `;
+      }).join('');
+
+      document.getElementById('quickStatusSheet').classList.add('open');
+    }
+
+    async function applyQuickStatusSelection(newVal) {
+      closeModal('quickStatusSheet');
+      if (!activeQuickStatusTarget) return;
+
+      const { sheetRow, colIndex, stationName } = activeQuickStatusTarget;
+      const rows = (appData[activeTab] && appData[activeTab].rows) || [];
+      const rowObj = rows.find(r => r.sheetRow === sheetRow);
+      if (!rowObj) return;
+
+      const prevVal = rowObj.cells[colIndex];
+      rowObj.cells[colIndex] = newVal;
+      renderKPIsAndTable();
+
+      if (gasUrl && !rowObj.isLocalNew) {
+        try {
+          showToast(`กำลังบันทึก "${newVal}" ลง Google Sheet...`, 'info');
+          await callGasPost({
+            action: 'updateCell',
+            tab: activeTab,
+            sheetRow,
+            colIndex,
+            value: newVal
+          });
+          showToast(`☁️ บันทึกลง Google Sheet สำเร็จ (${stationName})`, 'success');
+        } catch (err) {
+          rowObj.cells[colIndex] = prevVal;
+          renderKPIsAndTable();
+          showToast('บันทึกไม่สำเร็จ: ' + err.message, 'error');
+        }
+      } else {
+        recordLocalRowEdit(activeTab, sheetRow, rowObj.cells);
+        showToast(`บันทึก "${newVal}" ในเครื่องแล้ว (${stationName})`, 'info');
+      }
+    }
+
+    // =========================================================================
+    // Inline Quick Status Change in Table
+    // =========================================================================
+    async function onInlineStatusChange(sheetRow, colIndex, selectEl) {
+      const newVal = selectEl.value;
+      const rows = (appData[activeTab] && appData[activeTab].rows) || [];
+      const rowObj = rows.find(r => r.sheetRow === sheetRow);
+      if (!rowObj) return;
+
+      const prevVal = rowObj.cells[colIndex];
+      rowObj.cells[colIndex] = newVal;
+      selectEl.className = `status-select ${getStatusClass(newVal)}`;
+      renderKPIs();
+
+      if (gasUrl && !rowObj.isLocalNew) {
+        selectEl.classList.add('cell-saving');
+        try {
+          await callGasPost({
+            action: 'updateCell',
+            tab: activeTab,
+            sheetRow,
+            colIndex,
+            value: newVal
+          });
+          showToast(`บันทึกแถว ${sheetRow} (${rowObj.cells[0]}) ลง Google Sheet เรียบร้อย`, 'success');
+        } catch (err) {
+          rowObj.cells[colIndex] = prevVal;
+          selectEl.value = prevVal;
+          selectEl.className = `status-select ${getStatusClass(prevVal)}`;
+          renderKPIs();
+          showToast('บันทึกไม่สำเร็จ: ' + err.message, 'error');
+        } finally {
+          selectEl.classList.remove('cell-saving');
+        }
+      } else {
+        recordLocalRowEdit(activeTab, sheetRow, rowObj.cells);
+        showToast(`บันทึก "${newVal}" ของ ${rowObj.cells[0]} ไว้ในเครื่องแล้ว`, 'info');
+      }
+    }
+
+    // =========================================================================
+    // Multi-Row Selection & Bulk Update
+    // =========================================================================
+    function toggleRowSelect(sheetRow, isChecked) {
+      if (isChecked) selectedRows.add(sheetRow);
+      else selectedRows.delete(sheetRow);
+
+      const tr = document.getElementById('tr-row-' + sheetRow);
+      if (tr) tr.classList.toggle('row-selected', isChecked);
+      const card = document.getElementById('card-row-' + sheetRow);
+      if (card) card.classList.toggle('row-selected', isChecked);
+
+      updateSelectionUI();
+    }
+
+    function togglePageCheckAll(isChecked) {
+      const filtered = getFilteredRows(false);
+      const startIdx = (currentPage - 1) * pageSize;
+      const pageRows = filtered.slice(startIdx, startIdx + pageSize);
+      pageRows.forEach(r => {
+        if (isChecked) selectedRows.add(r.sheetRow);
+        else selectedRows.delete(r.sheetRow);
+      });
+      renderCurrentView();
+    }
+
+    function selectAllFiltered() {
+      const filtered = getFilteredRows(false);
+      filtered.forEach(r => selectedRows.add(r.sheetRow));
+      renderCurrentView();
+      showToast(`เลือกสถานีที่กรองอยู่ทั้งหมด ${filtered.length} สถานี`, 'info');
+    }
+
+    function clearSelection() {
+      selectedRows.clear();
+      renderCurrentView();
+    }
+
+    function updateSelectionUI() {
+      const count = selectedRows.size;
+      const bar = document.getElementById('bulkBar');
+      const clearBtn = document.getElementById('clearSelectionBtn');
+      document.getElementById('bulkCountLabel').textContent = `เลือก ${count} สถานี`;
+      bar.classList.toggle('visible', count > 0);
+      if (clearBtn) clearBtn.style.display = count > 0 ? 'inline-flex' : 'none';
+    }
+
+    function onBulkColChange() {
+      const val = document.getElementById('bulkColSelect').value || '';
+      const [, type] = val.split('|');
+      const container = document.getElementById('bulkValueContainer');
+
+      if (type === 'status') {
+        const opts = STATUS_OPTIONS.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+        container.innerHTML = `<select id="bulkTargetValue" class="select">${opts}</select>`;
+      } else {
+        container.innerHTML = `<input type="text" id="bulkTargetValue" class="input" placeholder="ดด/ปปปป เช่น 08/2570" style="width:160px;" />`;
+      }
+    }
+
+    async function applyBulkUpdate() {
+      if (selectedRows.size === 0) return;
+      const colSpec = document.getElementById('bulkColSelect').value;
+      const [colIdxStr, colType] = colSpec.split('|');
+      const colIndex = parseInt(colIdxStr, 10);
+      let newValue = document.getElementById('bulkTargetValue').value.trim();
+
+      if (colType === 'date') {
+        newValue = normalizeDateInput(newValue);
+        if (newValue && !/^\d{2}\/\d{4}$/.test(newValue)) {
+          alert('กรุณากรอกเดือน/ปี เป็นรูปแบบ ดด/ปปปป เช่น 08/2570');
+          return;
+        }
+      }
+
+      const rows = (appData[activeTab] && appData[activeTab].rows) || [];
+      const targetRows = rows.filter(r => selectedRows.has(r.sheetRow));
+      const bulkBtn = document.getElementById('bulkSaveBtn');
+      bulkBtn.disabled = true;
+
+      try {
+        if (gasUrl) {
+          const cloudUpdates = [];
+          targetRows.forEach(r => {
+            r.cells[colIndex] = newValue;
+            if (r.isLocalNew) {
+              recordLocalRowEdit(activeTab, r.sheetRow, r.cells);
+            } else {
+              cloudUpdates.push({ sheetRow: r.sheetRow, changes: { [colIndex]: newValue } });
+            }
+          });
+
+          if (cloudUpdates.length > 0) {
+            await callGasPost({
+              action: 'bulkUpdate',
+              tab: activeTab,
+              updates: cloudUpdates
+            });
+          }
+          showToast(`อัปเดต ${targetRows.length} สถานีลง Google Sheet สำเร็จ!`, 'success');
+        } else {
+          targetRows.forEach(r => {
+            r.cells[colIndex] = newValue;
+            recordLocalRowEdit(activeTab, r.sheetRow, r.cells);
+          });
+          showToast(`อัปเดต ${targetRows.length} สถานีในเครื่องแล้ว`, 'info');
+        }
+
+        selectedRows.clear();
+        renderKPIsAndTable();
+      } catch (err) {
+        showToast('อัปเดตแบบกลุ่มไม่สำเร็จ: ' + err.message, 'error');
+      } finally {
+        bulkBtn.disabled = false;
+      }
+    }
+
+    // =========================================================================
+    // Station Modal Form Logic & Quick Date Helper
+    // =========================================================================
+    function populateFormDatalists() {
+      const rows = (appData[activeTab] && appData[activeTab].rows) || [];
+      const provs = Array.from(new Set(rows.map(r => (r.cells[3] || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'th'));
+      const dists = Array.from(new Set(rows.map(r => (r.cells[2] || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'th'));
+      const subs = Array.from(new Set(rows.map(r => (r.cells[1] || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'th'));
+
+      document.getElementById('dlProvinces').innerHTML = provs.map(v => `<option value="${escapeHtml(v)}"></option>`).join('');
+      document.getElementById('dlDistricts').innerHTML = dists.map(v => `<option value="${escapeHtml(v)}"></option>`).join('');
+      document.getElementById('dlSubdistricts').innerHTML = subs.map(v => `<option value="${escapeHtml(v)}"></option>`).join('');
+    }
+
+    function buildModalRoundFields(cells) {
+      const schema = TAB_SCHEMAS[activeTab];
+      const grid = document.getElementById('modalRoundsGrid');
+      let html = '';
+
+      schema.rounds.forEach(rd => {
+        const dateVal = cells ? (cells[rd.dateCol] || '') : rd.defaultDate;
+        if (rd.isPaint) {
+          html += `
+            <div class="round-box paint-box">
+              <div class="round-box-header">
+                <span>🎨 ${escapeHtml(rd.label)}</span>
+              </div>
+              <div class="field-group">
+                <label class="field-label">กำหนดเดือน/ปี พ.ศ. (ดด/ปปปป)</label>
+                <input type="text" class="input date-modal-input" data-col="${rd.dateCol}" data-dtype="date" value="${escapeHtml(dateVal)}" placeholder="เช่น 06/2574" onfocus="lastFocusedDateInput = this" />
+              </div>
+            </div>
+          `;
+        } else {
+          const stVal = cells ? (cells[rd.statusCol] || 'รอดำเนินการ').trim() : 'รอดำเนินการ';
+          const opts = STATUS_OPTIONS.map(o =>
+            `<option value="${escapeHtml(o)}" ${o === stVal ? 'selected' : ''}>${escapeHtml(o)}</option>`
+          ).join('');
+
+          html += `
+            <div class="round-box">
+              <div class="round-box-header">
+                <span>🔧 ${escapeHtml(rd.label)}</span>
+              </div>
+              <div class="round-box-fields">
+                <div class="field-group">
+                  <label class="field-label">เดือน/ปี (ดด/ปปปป)</label>
+                  <input type="text" class="input date-modal-input" data-col="${rd.dateCol}" data-dtype="date" value="${escapeHtml(dateVal)}" placeholder="เช่น ${escapeHtml(rd.defaultDate)}" onfocus="lastFocusedDateInput = this" />
+                </div>
+                <div class="field-group">
+                  <label class="field-label">สถานะการดำเนินงาน</label>
+                  <select class="select" data-col="${rd.statusCol}" data-dtype="status">
+                    ${opts}
+                  </select>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      grid.innerHTML = html;
+    }
+
+    function quickApplyYear(yearStr) {
+      const target = lastFocusedDateInput || document.querySelector('.date-modal-input');
+      if (!target) return;
+      const current = target.value.trim();
+      if (/^\d{2}\/\d{4}$/.test(current)) {
+        const mm = current.slice(0, 2);
+        target.value = `${mm}/${yearStr}`;
+      } else if (/^\d{1,2}$/.test(current)) {
+        target.value = `${current.padStart(2, '0')}/${yearStr}`;
+      } else {
+        target.value = `08/${yearStr}`;
+      }
+      target.focus();
+    }
+
+    function quickApplyMonth(monthStr) {
+      const target = lastFocusedDateInput || document.querySelector('.date-modal-input');
+      if (!target) return;
+      const current = target.value.trim();
+      if (/^\d{2}\/\d{4}$/.test(current)) {
+        const yyyy = current.slice(3);
+        target.value = `${monthStr}/${yyyy}`;
+      } else {
+        target.value = `${monthStr}/2570`;
+      }
+      target.focus();
+    }
+
+    function toggleStationFieldsLock() {
+      const unlocked = editingMode === 'add' || document.getElementById('unlockStationCheck').checked;
+      ['formStationName', 'formSubdistrict', 'formDistrict', 'formProvince'].forEach(id => {
+        const el = document.getElementById(id);
+        el.readOnly = !unlocked;
+        el.style.backgroundColor = unlocked ? '#ffffff' : '#f1f5f9';
+      });
+    }
+
+    function openEditStationModal(sheetRow) {
+      const schema = TAB_SCHEMAS[activeTab];
+      const rows = (appData[activeTab] && appData[activeTab].rows) || [];
+      const rowObj = rows.find(r => r.sheetRow === sheetRow);
+      if (!rowObj) return;
+
+      editingMode = 'edit';
+      editingSheetRow = sheetRow;
+      lastFocusedDateInput = null;
+      populateFormDatalists();
+
+      document.getElementById('stationModalTitle').textContent = `✏️ แก้ไขข้อมูล: ${rowObj.cells[0]}`;
+      document.getElementById('stationModalSub').textContent = `แท็บ ${schema.short} • แถวที่ ${sheetRow} ใน Google Sheet`;
+
+      document.getElementById('formSubdistrictLabel').textContent = schema.locLabels.sub;
+      document.getElementById('formDistrictLabel').textContent = schema.locLabels.dist;
+
+      document.getElementById('formStationName').value = rowObj.cells[0] || '';
+      document.getElementById('formSubdistrict').value = rowObj.cells[1] || '';
+      document.getElementById('formDistrict').value = rowObj.cells[2] || '';
+      document.getElementById('formProvince').value = rowObj.cells[3] || '';
+
+      document.getElementById('unlockStationWrap').style.display = 'inline-flex';
+      document.getElementById('unlockStationCheck').checked = false;
+      toggleStationFieldsLock();
+
+      document.getElementById('deleteStationBtn').style.display = 'inline-flex';
+      buildModalRoundFields(rowObj.cells);
+      document.getElementById('stationModal').classList.add('open');
+    }
+
+    function openAddStationModal() {
+      const schema = TAB_SCHEMAS[activeTab];
+      editingMode = 'add';
+      editingSheetRow = null;
+      lastFocusedDateInput = null;
+      populateFormDatalists();
+
+      document.getElementById('stationModalTitle').textContent = `➕ เพิ่มสถานีใหม่ในแท็บ ${schema.short}`;
+      document.getElementById('stationModalSub').textContent = `กรอกชื่อสถานีและที่ตั้ง (ระบบตั้งค่าเดือน/ปี เริ่มต้นตามแผนมาตรฐานให้แล้ว)`;
+
+      document.getElementById('formSubdistrictLabel').textContent = schema.locLabels.sub;
+      document.getElementById('formDistrictLabel').textContent = schema.locLabels.dist;
+
+      document.getElementById('formStationName').value = '';
+      document.getElementById('formSubdistrict').value = document.getElementById('subdistrictFilter').value || '';
+      document.getElementById('formDistrict').value = document.getElementById('districtFilter').value || '';
+      document.getElementById('formProvince').value = document.getElementById('provinceFilter').value || '';
+
+      document.getElementById('unlockStationWrap').style.display = 'none';
+      toggleStationFieldsLock();
+
+      document.getElementById('deleteStationBtn').style.display = 'none';
+      buildModalRoundFields(null);
+      document.getElementById('stationModal').classList.add('open');
+      setTimeout(() => document.getElementById('formStationName').focus(), 80);
+    }
+
+    async function saveStationForm(e) {
+      e.preventDefault();
+      const schema = TAB_SCHEMAS[activeTab];
+      const cells = new Array(schema.activeCols).fill('');
+
+      cells[0] = document.getElementById('formStationName').value.trim();
+      cells[1] = document.getElementById('formSubdistrict').value.trim();
+      cells[2] = document.getElementById('formDistrict').value.trim();
+      cells[3] = document.getElementById('formProvince').value.trim();
+
+      if (!cells[0]) {
+        alert('กรุณากรอกชื่อสถานี');
+        return;
+      }
+
+      const fieldInputs = document.querySelectorAll('#modalRoundsGrid [data-col]');
+      for (const inp of fieldInputs) {
+        const colIdx = parseInt(inp.dataset.col, 10);
+        let v = inp.value.trim();
+        if (inp.dataset.dtype === 'date' && v !== '') {
+          v = normalizeDateInput(v);
+          if (!/^\d{2}\/\d{4}$/.test(v)) {
+            alert(`รูปแบบเดือน/ปี "${v}" ไม่ถูกต้อง กรุณากรอกเป็น ดด/ปปปป เช่น 08/2570`);
+            inp.focus();
+            return;
+          }
+        }
+        cells[colIdx] = v;
+      }
+
+      const submitBtn = document.getElementById('saveStationSubmitBtn');
+      submitBtn.disabled = true;
+
+      try {
+        const rows = appData[activeTab].rows;
+        if (editingMode === 'edit') {
+          const rowObj = rows.find(r => r.sheetRow === editingSheetRow);
+          if (!rowObj) throw new Error('ไม่พบแถวสถานี');
+
+          if (gasUrl && !rowObj.isLocalNew) {
+            const resp = await callGasPost({
+              action: 'updateRow',
+              tab: activeTab,
+              sheetRow: editingSheetRow,
+              cells
+            });
+            rowObj.cells = resp.cells || cells;
+            showToast(`บันทึกข้อมูล "${cells[0]}" ลง Google Sheet สำเร็จ!`, 'success');
+          } else {
+            rowObj.cells = cells;
+            recordLocalRowEdit(activeTab, editingSheetRow, cells);
+            showToast(`บันทึกข้อมูล "${cells[0]}" ไว้ในเครื่องแล้ว`, 'info');
+          }
+        } else {
+          // Add New Station
+          if (gasUrl) {
+            const resp = await callGasPost({
+              action: 'addRow',
+              tab: activeTab,
+              cells
+            });
+            rows.push({
+              sheetRow: resp.sheetRow,
+              cells: resp.cells || cells
+            });
+            showToast(`เพิ่มสถานี "${cells[0]}" ลง Google Sheet สำเร็จ!`, 'success');
+          } else {
+            const maxRow = rows.reduce((m, r) => Math.max(m, r.sheetRow || 1), 1);
+            const newRowObj = {
+              sheetRow: maxRow + 1,
+              cells,
+              isLocalNew: true
+            };
+            rows.push(newRowObj);
+            recordLocalRowAdd(activeTab, newRowObj);
+            showToast(`เพิ่มสถานี "${cells[0]}" ในเครื่องแล้ว`, 'info');
+          }
+        }
+
+        closeModal('stationModal');
+        renderAll();
+      } catch (err) {
+        showToast('เกิดข้อผิดพลาดในการบันทึก: ' + err.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    async function confirmDeleteStation() {
+      if (editingMode !== 'edit' || !editingSheetRow) return;
+      const rows = appData[activeTab].rows;
+      const idx = rows.findIndex(r => r.sheetRow === editingSheetRow);
+      if (idx === -1) return;
+
+      const stationName = rows[idx].cells[0];
+      if (!confirm(`ยืนยันการลบสถานี "${stationName}" (แถว ${editingSheetRow}) ออกจากตาราง?`)) return;
+
+      try {
+        if (gasUrl && !rows[idx].isLocalNew) {
+          await callGasPost({
+            action: 'deleteRow',
+            tab: activeTab,
+            sheetRow: editingSheetRow,
+            expectedStation: stationName
+          });
+          closeModal('stationModal');
+          await refreshFromCloud(true);
+          showToast(`ลบสถานี "${stationName}" ออกจาก Google Sheet แล้ว`, 'success');
+        } else {
+          rows.splice(idx, 1);
+          if (pendingLocalOps.added[activeTab]) {
+            pendingLocalOps.added[activeTab] = pendingLocalOps.added[activeTab].filter(x => x.sheetRow !== editingSheetRow);
+          }
+          if (pendingLocalOps.edits[activeTab]) {
+            delete pendingLocalOps.edits[activeTab][editingSheetRow];
+          }
+          savePendingOps();
+          closeModal('stationModal');
+          renderAll();
+          showToast(`ลบสถานี "${stationName}" ออกจากรายการในเครื่องแล้ว`, 'info');
+        }
+      } catch (err) {
+        showToast('ลบไม่สำเร็จ: ' + err.message, 'error');
+      }
+    }
+
+    // =========================================================================
+    // Mobile Bottom Navigation Actions
+    // =========================================================================
+    function mobileNavAction(action) {
+      if (action === 'list') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (action === 'filter') {
+        openMobileFilterModal();
+      } else if (action === 'add') {
+        openAddStationModal();
+      } else if (action === 'sync') {
+        if (!gasUrl) {
+          openSetupModal();
+          showToast('กรุณาวาง Web App URL เพื่อเปิดใช้งานการซิงค์', 'info');
+        } else {
+          syncPendingChanges();
+        }
+      } else if (action === 'menu') {
+        openMobileMenuModal();
+      }
+    }
+
+    function openMobileFilterModal() {
+      document.getElementById('mobileFilterModal').classList.add('open');
+      updateMobileFilterBadge();
+    }
+
+    function openMobileMenuModal() {
+      document.getElementById('mobileMenuModal').classList.add('open');
+    }
+
+    // =========================================================================
+    // QR Code & Share Link Generator (เปิดใช้งานบนมือถือในทันที)
+    // =========================================================================
+    function getMobileShareUrl() {
+      if (gasUrl) {
+        return gasUrl;
+      }
+      const loc = window.location;
+      if (loc.protocol.startsWith('http')) {
+        return loc.href;
+      }
+      return 'https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID;
+    }
+
+    function openQrModal() {
+      const shareUrl = getMobileShareUrl();
+      document.getElementById('shareUrlInput').value = shareUrl;
+
+      // Use dynamic Google Chart API or QR generator image
+      const qrImg = document.getElementById('qrImageEl');
+      const encoded = encodeURIComponent(shareUrl);
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encoded}`;
+
+      const note = document.getElementById('qrSyncNote');
+      if (gasUrl) {
+        note.textContent = '✅ แนบค่าเชื่อมต่อ Google Sheet ไปในลิงก์แล้ว เมื่อสแกนจะใช้งานได้ทันที';
+        note.style.color = '#059669';
+      } else {
+        note.textContent = '⚠️ หากตั้งค่า Web App URL ก่อนสแกน มือถือจะเชื่อมต่อ Google Sheet ให้อัตโนมัติ';
+        note.style.color = '#d97706';
+      }
+
+      document.getElementById('qrModal').classList.add('open');
+    }
+
+    async function copyShareUrl() {
+      const input = document.getElementById('shareUrlInput');
+      try {
+        await navigator.clipboard.writeText(input.value);
+        showToast('คัดลอกลิงก์สำหรับมือถือเรียบร้อย ส่งทาง LINE หรือแชทได้เลย!', 'success');
+      } catch (_) {
+        input.select();
+        document.execCommand('copy');
+        showToast('คัดลอกลิงก์เรียบร้อย!', 'success');
+      }
+    }
+
+    // Check URL parameters on load for auto-pairing (?gas=... or ?view=...)
+    function checkUrlParams() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const gasParam = urlParams.get('gas') || (window.location.hash.startsWith('#gas=') ? window.location.hash.slice(5) : null);
+        if (gasParam && gasParam.startsWith('http')) {
+          gasUrl = gasParam.trim();
+          localStorage.setItem(STORAGE_KEY_GAS_URL, gasUrl);
+          showToast('✅ เชื่อมต่อ Google Sheet อัตโนมัติจากลิงก์เรียบร้อย!', 'success');
+        }
+        const viewParam = urlParams.get('view');
+        if (viewParam === 'card' || viewParam === 'table') {
+          viewMode = viewParam;
+          localStorage.setItem(STORAGE_KEY_VIEW_MODE, viewMode);
+        }
+      } catch (_) {}
+    }
+
+    // =========================================================================
+    // CSV Export
+    // =========================================================================
+    function exportCurrentTabCsv() {
+      const sheetObj = appData[activeTab];
+      if (!sheetObj) return;
+      const schema = TAB_SCHEMAS[activeTab];
+
+      const defaultHeaders = (() => {
+        const h = ['สถานี', schema.locLabels.sub, schema.locLabels.dist, schema.locLabels.prov];
+        schema.rounds.forEach(r => {
+          h.push(r.label);
+          if (r.statusCol !== null) h.push('สถานะ');
+        });
+        return h;
+      })();
+
+      const rows = getFilteredRows(false);
+      const csvLines = [];
+      csvLines.push(defaultHeaders.map(h => `"${String(h).replace(/"/g, '""')}"`).join(','));
+
+      rows.forEach(r => {
+        const line = [];
+        line.push(`"${String(r.cells[0] || '').replace(/"/g, '""')}"`);
+        line.push(`"${String(r.cells[1] || '').replace(/"/g, '""')}"`);
+        line.push(`"${String(r.cells[2] || '').replace(/"/g, '""')}"`);
+        line.push(`"${String(r.cells[3] || '').replace(/"/g, '""')}"`);
+
+        schema.rounds.forEach(rd => {
+          line.push(`"${String(r.cells[rd.dateCol] || '').replace(/"/g, '""')}"`);
+          if (rd.statusCol !== null) {
+            line.push(`"${String(r.cells[rd.statusCol] || '').replace(/"/g, '""')}"`);
+          }
+        });
+        csvLines.push(line.join(','));
+      });
+
+      const csvContent = '\uFEFF' + csvLines.join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `PM_Plan_${schema.short}_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(`ส่งออก CSV สำเร็จ (${rows.length} สถานี)`, 'success');
+    }
+
+    // =========================================================================
+    // Embedded Code.gs for Easy Copying
+    // =========================================================================
+    const EMBEDDED_CODE_GS = `const SPREADSHEET_ID = '1TJM3PnV12H__uoCv2VuwtfbceSRfmR3l4lq81xq8vJE';
+
+const STATUS_OPTIONS = [
+  'รอดำเนินการ',
+  'ส่งหนังสือแจ้งแผนงานเรียบร้อย',
+  'อยู่ระหว่างดำเนินการ',
+  'พบปัญหา / รอดำเนินการแก้ไข',
+  'ดำเนินการแล้วเสร็จ',
+  'เอกสารจัดทำแล้วเสร็จ'
+];
+
+const SHEET_CONFIG = {
+  LK: { key: 'LK', name: 'ลข', gid: 475478333, activeCols: 15, dateCols: [4, 6, 8, 10, 12, 13], statusCols: [5, 7, 9, 11, 14] },
+  BSGW: { key: 'BSGW', name: 'BS/GW', gid: 1755639936, activeCols: 25, dateCols: [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 23], statusCols: [5, 7, 9, 11, 13, 15, 17, 19, 21, 24] },
+  BSSC: { key: 'BSSC', name: 'BSSC', gid: 0, activeCols: 24, dateCols: [4, 6, 8, 10, 12, 14, 16, 18, 20, 22], statusCols: [5, 7, 9, 11, 13, 15, 17, 19, 21, 23] }
+};
+
+function doGet(e) {
+  try {
+    const params = (e && e.parameter) ? e.parameter : {};
+    const action = params.action;
+
+    if (action === 'ping') {
+      const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+      const result = { ok: true, title: ss.getName(), spreadsheetId: SPREADSHEET_ID, updatedAt: new Date().toISOString() };
+      if (params.callback) {
+        const safeCb = String(params.callback).replace(/[^a-zA-Z0-9_$.]/g, '');
+        return ContentService.createTextOutput(safeCb + '(' + JSON.stringify(result) + ');').setMimeType(ContentService.MimeType.JAVASCRIPT);
+      }
+      return jsonResponse_(result);
+    }
+
+    if (action === 'getAll') {
+      const result = readAllSheets_();
+      if (params.callback) {
+        const safeCb = String(params.callback).replace(/[^a-zA-Z0-9_$.]/g, '');
+        return ContentService.createTextOutput(safeCb + '(' + JSON.stringify(result) + ');').setMimeType(ContentService.MimeType.JAVASCRIPT);
+      }
+      return jsonResponse_(result);
+    }
+
+    // หากเปิดผ่านเบราว์เซอร์หรือมือถือโดยตรง จะโหลดหน้าเว็บให้อัตโนมัติ
+    try {
+      return HtmlService.createHtmlOutputFromFile('index')
+        .setTitle('ระบบกรอกและติดตามแผนงาน PM Plan')
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+        .addMetaTag('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=5.0');
+    } catch (_) {
+      return jsonResponse_(readAllSheets_());
+    }
+  } catch (err) {
+    return jsonResponse_({ ok: false, error: err && err.message ? err.message : String(err) });
+  }
+}
+
+function doPost(e) {
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(20000);
+    const rawBody = (e && e.postData && e.postData.contents) ? e.postData.contents : '{}';
+    const payload = JSON.parse(rawBody);
+    const action = payload.action;
+
+    if (action === 'getAll') return jsonResponse_(readAllSheets_());
+    if (action === 'updateCell') return jsonResponse_(updateCell_(payload));
+    if (action === 'updateRow') return jsonResponse_(updateRow_(payload));
+    if (action === 'bulkUpdate') return jsonResponse_(bulkUpdate_(payload));
+    if (action === 'addRow') return jsonResponse_(addRow_(payload));
+    if (action === 'deleteRow') return jsonResponse_(deleteRow_(payload));
+
+    return jsonResponse_({ ok: false, error: 'ไม่รู้จัก action: ' + action });
+  } catch (err) {
+    return jsonResponse_({ ok: false, error: err && err.message ? err.message : String(err) });
+  } finally {
+    try { lock.releaseLock(); } catch (_) {}
+  }
+}
+
+function jsonResponse_(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function getTargetSheet_(ss, tabKey) {
+  const cfg = SHEET_CONFIG[tabKey];
+  if (!cfg) throw new Error('ไม่พบแท็บ: ' + tabKey);
+  const sheets = ss.getSheets();
+  for (let i = 0; i < sheets.length; i++) {
+    if (sheets[i].getSheetId() === cfg.gid) return { sheet: sheets[i], cfg };
+  }
+  const byName = ss.getSheetByName(cfg.name);
+  if (byName) return { sheet: byName, cfg };
+  throw new Error('ไม่พบชีต "' + cfg.name + '" ใน Google Sheet');
+}
+
+function readAllSheets_() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const out = {};
+  Object.keys(SHEET_CONFIG).forEach(function(key) {
+    const target = getTargetSheet_(ss, key);
+    const sheet = target.sheet;
+    const cfg = target.cfg;
+    const lastRow = sheet.getLastRow();
+    if (lastRow < 2) {
+      out[key] = { key, name: cfg.name, gid: cfg.gid, headers: [], rows: [] };
+      return;
+    }
+    const headers = sheet.getRange(1, 1, 1, cfg.activeCols).getDisplayValues()[0];
+    const dataRange = sheet.getRange(2, 1, lastRow - 1, cfg.activeCols);
+    const displayValues = dataRange.getDisplayValues();
+    const rows = [];
+    for (let r = 0; r < displayValues.length; r++) {
+      const vals = displayValues[r];
+      const hasAny = vals.some(function(v) { return String(v).trim() !== ''; });
+      if (hasAny) rows.push({ sheetRow: r + 2, cells: vals });
+    }
+    out[key] = { key, name: cfg.name, gid: cfg.gid, headers, rows };
+  });
+  return { ok: true, sheets: out, updatedAt: new Date().toISOString() };
+}
+
+function updateCell_(p) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const target = getTargetSheet_(ss, p.tab);
+  const sheet = target.sheet;
+  const cfg = target.cfg;
+  const r = parseInt(p.sheetRow, 10);
+  const colIndex = parseInt(p.colIndex, 10);
+  sheet.getRange(r, colIndex + 1).setValue(p.value);
+  SpreadsheetApp.flush();
+  return { ok: true, sheetRow: r, colIndex, value: p.value };
+}
+
+function updateRow_(p) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const target = getTargetSheet_(ss, p.tab);
+  const sheet = target.sheet;
+  const cfg = target.cfg;
+  const r = parseInt(p.sheetRow, 10);
+  const cells = p.cells.slice(0, cfg.activeCols);
+  sheet.getRange(r, 1, 1, cfg.activeCols).setValues([cells]);
+  SpreadsheetApp.flush();
+  return { ok: true, sheetRow: r, cells };
+}
+
+function bulkUpdate_(p) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const target = getTargetSheet_(ss, p.tab);
+  const sheet = target.sheet;
+  (p.updates || []).forEach(function(u) {
+    const r = parseInt(u.sheetRow, 10);
+    Object.keys(u.changes).forEach(function(colStr) {
+      const colIdx = parseInt(colStr, 10);
+      sheet.getRange(r, colIdx + 1).setValue(u.changes[colStr]);
+    });
+  });
+  SpreadsheetApp.flush();
+  return { ok: true, updatedCount: (p.updates || []).length };
+}
+
+function addRow_(p) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const target = getTargetSheet_(ss, p.tab);
+  const sheet = target.sheet;
+  const cfg = target.cfg;
+  const lastRow = sheet.getLastRow();
+  const newRowNumber = lastRow + 1;
+  const cells = (p.cells || []).slice(0, cfg.activeCols);
+  while (cells.length < cfg.activeCols) cells.push('');
+  sheet.getRange(newRowNumber, 1, 1, cfg.activeCols).setValues([cells]);
+  SpreadsheetApp.flush();
+  return { ok: true, sheetRow: newRowNumber, cells };
+}
+
+function deleteRow_(p) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const target = getTargetSheet_(ss, p.tab);
+  const sheet = target.sheet;
+  const r = parseInt(p.sheetRow, 10);
+  sheet.deleteRow(r);
+  SpreadsheetApp.flush();
+  return { ok: true, deletedRow: r };
+}`;
+
+    // =========================================================================
+    // Setup Modal & GAS Config Logic
+    // =========================================================================
+    function openSetupModal() {
+      document.getElementById('gasUrlInput').value = gasUrl;
+      document.getElementById('gasTestResult').textContent = '';
+      document.getElementById('codeGsPreview').textContent = EMBEDDED_CODE_GS;
+      document.getElementById('setupModal').classList.add('open');
+    }
+
+    async function copyCodeGs() {
+      try {
+        await navigator.clipboard.writeText(EMBEDDED_CODE_GS);
+        showToast('คัดลอกโค้ด Code.gs แล้ว นำไปวางใน Apps Script ได้เลย!', 'success');
+      } catch (_) {
+        const pre = document.getElementById('codeGsPreview');
+        const range = document.createRange();
+        range.selectNodeContents(pre);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        document.execCommand('copy');
+        showToast('คัดลอกโค้ด Code.gs เรียบร้อย!', 'success');
+      }
+    }
+
+    async function saveAndTestGasUrl() {
+      const val = document.getElementById('gasUrlInput').value.trim();
+      const resEl = document.getElementById('gasTestResult');
+      const btn = document.getElementById('testGasBtn');
+
+      if (!val) {
+        resEl.style.color = '#dc2626';
+        resEl.textContent = 'กรุณาวาง Web App URL ที่ได้จากการ Deploy';
+        return;
+      }
+
+      btn.disabled = true;
+      resEl.style.color = '#1d4ed8';
+      resEl.textContent = 'กำลังทดสอบการเชื่อมต่อกับ Google Sheet...';
+
+      try {
+        const r = await fetch(`${val}${val.includes('?') ? '&' : '?'}action=ping&_ts=${Date.now()}`, {
+          method: 'GET',
+          mode: 'cors',
+          credentials: 'omit',
+          redirect: 'follow'
+        });
+        const data = await r.json();
+        if (!data || !data.ok) {
+          throw new Error((data && data.error) || 'ไม่พบการตอบกลับที่ถูกต้อง');
+        }
+
+        gasUrl = val;
+        localStorage.setItem(STORAGE_KEY_GAS_URL, gasUrl);
+        resEl.style.color = '#059669';
+        resEl.textContent = `✅ เชื่อมต่อสำเร็จ! ไฟล์: "${data.title}" พร้อมบันทึกข้อมูลลง Google Sheet แล้ว`;
+        updateConnectionPill();
+        updatePendingBanner();
+        showToast('เชื่อมต่อ Google Sheet สำเร็จ!', 'success');
+        await refreshFromCloud(true);
+      } catch (err) {
+        resEl.style.color = '#dc2626';
+        resEl.textContent = `❌ เชื่อมต่อไม่สำเร็จ: ${err.message} (ตรวจสอบว่าเลือก Who has access = Anyone และ URL ลงท้ายด้วย /exec)`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function clearGasUrl() {
+      gasUrl = '';
+      localStorage.removeItem(STORAGE_KEY_GAS_URL);
+      document.getElementById('gasUrlInput').value = '';
+      document.getElementById('gasTestResult').style.color = '#475569';
+      document.getElementById('gasTestResult').textContent = 'ล้าง URL แล้ว (กลับสู่โหมดอ่านข้อมูลสด/บันทึกในเครื่อง)';
+      updateConnectionPill();
+      updatePendingBanner();
+    }
+
+    // =========================================================================
+    // Modal Helpers
+    // =========================================================================
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('open');
+    }
+
+    function onBackdropClick(e, id) {
+      if (e.target && e.target.id === id) {
+        closeModal(id);
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        ['stationModal', 'setupModal', 'quickStatusSheet', 'mobileFilterModal', 'mobileMenuModal', 'qrModal'].forEach(closeModal);
+      }
+    });
+
+    // =========================================================================
+    // Initialization
+    // =========================================================================
+    (function init() {
+      checkUrlParams();
+      populateStatusFilter();
+      populateRoundSelectors();
+      applyPendingOverlaysToData();
+      setViewMode(viewMode);
+      renderAll();
+
+      // Automatically fetch latest data from Google Sheet in background
+      refreshFromCloud(true);
+
+      // Start continuous auto-sync every 10 seconds
+      startAutoSync();
+    })();
+  </script>
+</body>
+</html>
