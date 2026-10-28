@@ -1778,7 +1778,7 @@
         <div class="brand-text">
           <h1 class="brand-title">
             <span>อัปเดตสถานะการเข้าบำรุงรักษาเชิงป้องกัน (PM)</span>
-            <span class="brand-badge" id="headerActiveTabBadge">ลข</span>
+            <span class="brand-badge" id="headerActiveTabBadge">BSSC</span>
           </h1>
           <div class="brand-sub" id="lastSyncText" style="display:none;"></div>
         </div>
@@ -1817,9 +1817,9 @@
       <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:260px;">
         <label class="field-label" for="sheetTabSelect" style="margin:0; font-size:0.9rem; font-weight:700; white-space:nowrap; color:var(--text);">📁 เลือกประเภทสถานี:</label>
         <select id="sheetTabSelect" class="select" style="font-weight:700; font-size:0.95rem; padding:8px 12px; border-color:var(--primary); background:#eff6ff;" onchange="switchTab(this.value)">
-          <option value="LK" id="opt-LK" selected>ลข (สถานีลูกข่าย) • 181 สถานี</option>
-          <option value="BSGW" id="opt-BSGW">BS/GW (แม่ข่าย) • 16 สถานี</option>
-          <option value="BSSC" id="opt-BSSC">BSSC (ศูนย์ควบคุม) • 1 สถานี</option>
+          <option value="BSSC" id="opt-BSSC" selected>BSSC (ศูนย์ควบคุม) • 1 สถานี</option>
+          <option value="BSGW" id="opt-BSGW">AGW/BS (สถานีทวนสัญญาณ , สถานีแม่ข่าย) • 16 สถานี</option>
+          <option value="LK" id="opt-LK">ลข (สถานีลูกข่าย) • 181 สถานี</option>
         </select>
       </div>
 
@@ -2127,9 +2127,9 @@
         <div>
           <div class="field-label" style="margin-bottom:6px;">📁 เลือกชีตที่ต้องการทำงาน:</div>
           <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px;">
-            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabLK" onclick="switchTab('LK'); closeModal('mobileMenuModal');">ลข (<span id="mMenuCountLK">0</span>)</button>
-            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabBSGW" onclick="switchTab('BSGW'); closeModal('mobileMenuModal');">BS/GW (<span id="mMenuCountBSGW">0</span>)</button>
             <button type="button" class="btn btn-outline btn-sm" id="mMenuTabBSSC" onclick="switchTab('BSSC'); closeModal('mobileMenuModal');">BSSC (<span id="mMenuCountBSSC">0</span>)</button>
+            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabBSGW" onclick="switchTab('BSGW'); closeModal('mobileMenuModal');">AGW/BS (<span id="mMenuCountBSGW">0</span>)</button>
+            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabLK" onclick="switchTab('LK'); closeModal('mobileMenuModal');">ลข (<span id="mMenuCountLK">0</span>)</button>
           </div>
         </div>
 
@@ -2405,8 +2405,8 @@
       },
       BSGW: {
         key: 'BSGW',
-        title: 'BS/GW (แม่ข่าย/เกตเวย์)',
-        short: 'BS/GW',
+        title: 'AGW/BS (สถานีทวนสัญญาณ , สถานีแม่ข่าย)',
+        short: 'AGW/BS',
         gid: '1755639936',
         activeCols: 25,
         locLabels: { sub: 'ตำบล', dist: 'อำเภอ', prov: 'จังหวัด' },
@@ -2450,7 +2450,7 @@
     // Application State
     // =========================================================================
     let appData = deepClone(window.INITIAL_PM_DATA || { LK: { headers: [], rows: [] }, BSGW: { headers: [], rows: [] }, BSSC: { headers: [], rows: [] } });
-    let activeTab = 'LK';
+    let activeTab = 'BSSC';
     let focusRoundId = 'ALL';
     let currentPage = 1;
     let pageSize = 200;
@@ -2876,8 +2876,8 @@
     // UI Rendering & Filtering
     // =========================================================================
     function updateTabBadges() {
-      const names = { LK: 'ลข (สถานีลูกข่าย)', BSGW: 'BS/GW (แม่ข่าย)', BSSC: 'BSSC (ศูนย์ควบคุม)' };
-      ['LK', 'BSGW', 'BSSC'].forEach(k => {
+      const names = { BSSC: 'BSSC (ศูนย์ควบคุม)', BSGW: 'AGW/BS (สถานีทวนสัญญาณ , สถานีแม่ข่าย)', LK: 'ลข (สถานีลูกข่าย)' };
+      ['BSSC', 'BSGW', 'LK'].forEach(k => {
         const count = (appData[k] && appData[k].rows) ? appData[k].rows.length : 0;
         const el = document.getElementById('badge-' + k);
         if (el) el.textContent = count;
