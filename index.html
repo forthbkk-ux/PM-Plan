@@ -1146,7 +1146,7 @@
       border-top: 1px solid var(--border);
       box-shadow: 0 -4px 18px rgba(15, 23, 42, 0.08);
       z-index: 55;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       align-items: center;
     }
 
@@ -1777,7 +1777,7 @@
     </div>
   </main>
 
-  <!-- Mobile Bottom Sticky Navigation Bar -->
+  <!-- Mobile Bottom Sticky Navigation Bar (ซ่อน เพิ่มสถานี, ซิงค์ Sheet, เมนู ตามที่วงไว้) -->
   <nav class="mobile-bottom-nav" id="mobileBottomNav">
     <button type="button" class="nav-btn active" id="mNavList" onclick="mobileNavAction('list')">
       <span class="nav-btn-icon">📋</span>
@@ -1787,19 +1787,6 @@
       <span class="nav-btn-icon">🔍</span>
       <span>ตัวกรอง</span>
       <span class="nav-badge-dot" id="mNavFilterDot" style="display:none;"></span>
-    </button>
-    <button type="button" class="nav-btn" id="mNavAdd" onclick="mobileNavAction('add')">
-      <span class="nav-btn-icon" style="color:var(--success);">➕</span>
-      <span>เพิ่มสถานี</span>
-    </button>
-    <button type="button" class="nav-btn" id="mNavSync" onclick="mobileNavAction('sync')">
-      <span class="nav-btn-icon">☁️</span>
-      <span id="mNavSyncLabel">ซิงค์ Sheet</span>
-      <span class="nav-badge-count" id="mNavSyncBadge" style="display:none;">0</span>
-    </button>
-    <button type="button" class="nav-btn" id="mNavMenu" onclick="mobileNavAction('menu')">
-      <span class="nav-btn-icon">⚙️</span>
-      <span>เมนู</span>
     </button>
   </nav>
 
@@ -2242,9 +2229,12 @@
     let gasUrl = (localStorage.getItem(STORAGE_KEY_GAS_URL) || '').trim();
     let pendingLocalOps = loadPendingOps();
 
-    // Default to 'card' (แนวตั้ง / การ์ดมือถือ), or retrieve saved preference
+    // Always use 'card' (แนวตั้ง / การ์ดมือถือ) on mobile screens
     const isMobileDevice = window.innerWidth <= 768;
-    let viewMode = localStorage.getItem(STORAGE_KEY_VIEW_MODE) || 'card';
+    let viewMode = isMobileDevice ? 'card' : (localStorage.getItem(STORAGE_KEY_VIEW_MODE) || 'card');
+    if (isMobileDevice) {
+      localStorage.setItem(STORAGE_KEY_VIEW_MODE, 'card');
+    }
 
     let activeQuickStatusTarget = null;
     let lastFocusedDateInput = null;
