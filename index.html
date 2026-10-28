@@ -597,14 +597,15 @@
 
     .filter-grid {
       display: grid;
-      grid-template-columns: 2fr 1.1fr 1.1fr 1.1fr 1.1fr 1.4fr auto;
+      grid-template-columns: 1fr 1fr auto;
       gap: 10px;
       align-items: end;
+      margin-top: 10px;
     }
 
-    @media (max-width: 1280px) {
+    @media (max-width: 640px) {
       .filter-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 1fr;
       }
     }
 
@@ -1532,7 +1533,13 @@
       }
 
       .filter-grid {
-        display: none; /* Collapsed on mobile, opened via bottom sheet or quick search */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .filter-grid .field-group:last-child {
+        grid-column: 1 / -1;
       }
 
       .filter-card {
@@ -1601,7 +1608,7 @@
   <!-- Top Navigation Header -->
   <header class="topbar">
     <div class="topbar-inner">
-      <div class="brand">
+      <div class="brand" onclick="openMobileMenuModal()" style="cursor:pointer;" title="คลิกเพื่อเปิดเมนูและการตั้งค่า">
         <div class="brand-icon">📡</div>
         <div class="brand-text">
           <h1 class="brand-title">
@@ -1612,13 +1619,8 @@
         </div>
       </div>
 
-      <!-- Desktop Header Actions (ซ่อนปุ่ม เปิดในมือถือ และ เมนู ตามที่ตีกรอบสีแดง) -->
+      <!-- Desktop Header Actions (ซ่อนปุ่มสลับมุมมองแนวตั้ง/แนวนอนตามที่ระบุ) -->
       <div class="topbar-actions">
-        <div class="view-toggle-wrap">
-          <button type="button" class="view-toggle-btn active" id="btnViewCardDesktop" onclick="setViewMode('card')">📱 แนวตั้ง</button>
-          <button type="button" class="view-toggle-btn" id="btnViewTableDesktop" onclick="setViewMode('table')">📊 แนวนอน (ตาราง)</button>
-        </div>
-
         <button type="button" class="btn btn-glass" onclick="refreshFromCloud()" id="refreshBtn" title="ดึงข้อมูลล่าสุดจาก Google Sheet">
           🔄 รีเฟรช
         </button>
@@ -1626,10 +1628,6 @@
 
       <!-- Mobile Header Actions -->
       <div class="mobile-header-actions">
-        <button type="button" class="btn btn-glass btn-sm" id="btnToggleViewMobile" onclick="toggleViewMode()" title="สลับมุมมอง แนวตั้ง/แนวนอน">
-          <span id="mobileViewIcon">📊 แนวนอน</span>
-        </button>
-
         <button type="button" class="btn btn-glass btn-sm btn-icon" onclick="refreshFromCloud()" title="รีเฟรชข้อมูล">
           🔄
         </button>
@@ -1649,23 +1647,20 @@
       </div>
     </div>
 
-    <!-- Sheet Tabs + Quick View Controls -->
-    <div class="tabs-row">
-      <div class="sheet-tabs" role="tablist">
-        <button type="button" class="sheet-tab active" data-tab="LK" onclick="switchTab('LK')">
-          ลข (สถานีลูกข่าย) <span class="tab-badge" id="badge-LK">0</span>
-        </button>
-        <button type="button" class="sheet-tab" data-tab="BSGW" onclick="switchTab('BSGW')">
-          BS/GW (แม่ข่าย) <span class="tab-badge" id="badge-BSGW">0</span>
-        </button>
-        <button type="button" class="sheet-tab" data-tab="BSSC" onclick="switchTab('BSSC')">
-          BSSC (ศูนย์ควบคุม) <span class="tab-badge" id="badge-BSSC">0</span>
-        </button>
+    <!-- Sheet Selection Dropdown + PM Round Selector (ทำเป็น Dropdown ขึ้นมาเลือกก่อนตามภาพที่ 1) -->
+    <div class="tabs-row" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+      <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:260px;">
+        <label class="field-label" for="sheetTabSelect" style="margin:0; font-size:0.9rem; font-weight:700; white-space:nowrap; color:var(--text);">📁 เลือกประเภทสถานี:</label>
+        <select id="sheetTabSelect" class="select" style="font-weight:700; font-size:0.95rem; padding:8px 12px; border-color:var(--primary); background:#eff6ff;" onchange="switchTab(this.value)">
+          <option value="LK" id="opt-LK" selected>ลข (สถานีลูกข่าย) • 181 สถานี</option>
+          <option value="BSGW" id="opt-BSGW">BS/GW (แม่ข่าย) • 16 สถานี</option>
+          <option value="BSSC" id="opt-BSSC">BSSC (ศูนย์ควบคุม) • 1 สถานี</option>
+        </select>
       </div>
 
       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        <label class="field-label" for="focusRoundSelect" style="margin:0; font-size:0.82rem;">โฟกัสรอบ PM:</label>
-        <select id="focusRoundSelect" class="select" style="width:auto; min-width:180px; padding:6px 10px; font-size:0.86rem;" onchange="onFocusRoundChange()">
+        <label class="field-label" for="focusRoundSelect" style="margin:0; font-size:0.85rem; font-weight:600; white-space:nowrap;">รอบ PM:</label>
+        <select id="focusRoundSelect" class="select" style="width:auto; min-width:170px; padding:8px 10px; font-size:0.88rem;" onchange="onFocusRoundChange()">
           <option value="ALL">แสดงครบทุกรอบ PM</option>
         </select>
       </div>
@@ -1683,23 +1678,19 @@
 
     <!-- Search & Filters Toolbar -->
     <section class="filter-card">
-      <!-- Search Input + Mobile Filter Button -->
+      <!-- Search Input -->
       <div class="mobile-search-row">
         <div class="search-input-wrap">
           <span class="search-icon-fixed">🔍</span>
           <input type="text" id="searchInput" class="input" placeholder="ค้นหาชื่อสถานี, ตำบล, อำเภอ, จังหวัด หรือเลขแถว..." oninput="onFilterChange()" />
           <button type="button" id="searchClearBtn" class="search-clear-btn" onclick="clearSearchInput()">&times;</button>
         </div>
-        <button type="button" class="btn btn-outline btn-sm" id="btnOpenMobileFilter" onclick="openMobileFilterModal()">
-          <span>⚙️ ตัวกรอง</span>
-          <span id="mobileFilterActiveBadge" style="display:none; background:var(--primary); color:#ffffff; font-size:0.7rem; padding:1px 6px; border-radius:999px;">0</span>
-        </button>
       </div>
 
-      <!-- Quick Horizontally Scrollable Status Chips -->
-      <div class="quick-status-bar" id="quickStatusBar"></div>
+      <!-- Quick Horizontally Scrollable Status Chips (ซ่อนตามที่วงไว้ในภาพที่ 2) -->
+      <div class="quick-status-bar" id="quickStatusBar" style="display:none;"></div>
 
-      <!-- Desktop Filter Grid (Hidden on Mobile, opened in sheet) -->
+      <!-- Filter Grid (ซ่อน อำเภอ ตำบล กรองจากรอบ ตามที่วงไว้ในภาพที่ 3 เหลือ จังหวัด และ สถานะ) -->
       <div class="filter-grid" id="desktopFilterGrid">
         <div class="field-group">
           <label class="field-label" for="provinceFilter">จังหวัด</label>
@@ -1708,21 +1699,21 @@
           </select>
         </div>
 
-        <div class="field-group">
+        <div class="field-group" style="display:none;">
           <label class="field-label" id="districtFilterLabel" for="districtFilter">อำเภอ</label>
           <select id="districtFilter" class="select" onchange="onDistrictFilterChange()">
             <option value="">ทุกอำเภอ</option>
           </select>
         </div>
 
-        <div class="field-group">
+        <div class="field-group" style="display:none;">
           <label class="field-label" id="subdistrictFilterLabel" for="subdistrictFilter">ตำบล</label>
           <select id="subdistrictFilter" class="select" onchange="onFilterChange()">
             <option value="">ทุกตำบล</option>
           </select>
         </div>
 
-        <div class="field-group">
+        <div class="field-group" style="display:none;">
           <label class="field-label" for="roundFilter">กรองจากรอบ PM</label>
           <select id="roundFilter" class="select" onchange="onFilterChange()">
             <option value="ANY">รอบที่</option>
@@ -1783,12 +1774,6 @@
         <button type="button" class="btn btn-outline btn-sm" id="prevPageBtn" onclick="changePage(-1)">◀ ก่อนหน้า</button>
         <button type="button" class="btn btn-outline btn-sm" id="nextPageBtn" onclick="changePage(1)">ถัดไป ▶</button>
       </div>
-    </div>
-
-    <!-- Clean Footer Actions (เข้าถึงเมนูและการตั้งค่าได้โดยไม่รกแถบด้านบน) -->
-    <div style="text-align:center; padding:24px 12px 10px; color:var(--text-light); font-size:0.82rem; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-      <button type="button" class="btn btn-outline btn-sm" onclick="openMobileMenuModal()">⚙️ เมนูและการตั้งค่า</button>
-      <button type="button" class="btn btn-outline btn-sm" onclick="openQrModal()">📱 เปิดในมือถือ (QR Code)</button>
     </div>
   </main>
 
@@ -2670,12 +2655,15 @@
     // UI Rendering & Filtering
     // =========================================================================
     function updateTabBadges() {
+      const names = { LK: 'ลข (สถานีลูกข่าย)', BSGW: 'BS/GW (แม่ข่าย)', BSSC: 'BSSC (ศูนย์ควบคุม)' };
       ['LK', 'BSGW', 'BSSC'].forEach(k => {
         const count = (appData[k] && appData[k].rows) ? appData[k].rows.length : 0;
         const el = document.getElementById('badge-' + k);
         if (el) el.textContent = count;
         const mEl = document.getElementById('mMenuCount' + k);
         if (mEl) mEl.textContent = count;
+        const optEl = document.getElementById('opt-' + k);
+        if (optEl) optEl.textContent = `${names[k]} • ${count} สถานี`;
       });
 
       const headerTab = document.getElementById('headerActiveTabBadge');
@@ -2691,6 +2679,9 @@
       focusRoundId = 'ALL';
       currentPage = 1;
       selectedRows.clear();
+
+      const tabSelect = document.getElementById('sheetTabSelect');
+      if (tabSelect) tabSelect.value = tabKey;
 
       document.querySelectorAll('.sheet-tab').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tabKey);
