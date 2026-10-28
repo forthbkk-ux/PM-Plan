@@ -2309,9 +2309,9 @@
             🔗 วาง Web App URL จาก Google Apps Script (ลงท้ายด้วย <code>/exec</code>)
           </label>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <input type="url" id="gasUrlInput" class="input" style="flex:1; min-width:260px;" placeholder="https://script.google.com/macros/s/AKfycb.../exec" />
+            <input type="url" id="gasUrlInput" class="input" style="flex:1; min-width:260px;" value="https://script.google.com/macros/s/AKfycbzfg80qYz8fFQtGMymFI40mpkIS7bhpzx_PQVxRHhS_HdrNR6ZD59n_QLD_MCUwuwI/exec" placeholder="https://script.google.com/macros/s/AKfycbzfg80qYz8fFQtGMymFI40mpkIS7bhpzx_PQVxRHhS_HdrNR6ZD59n_QLD_MCUwuwI/exec" />
             <button type="button" class="btn btn-primary" onclick="saveAndTestGasUrl()" id="testGasBtn">บันทึกและทดสอบ</button>
-            <button type="button" class="btn btn-outline" onclick="clearGasUrl()">ล้าง URL</button>
+            <button type="button" class="btn btn-outline" onclick="clearGasUrl()" title="รีเซ็ตกลับเป็น URL เริ่มต้นที่ฝังไว้ในระบบ">รีเซ็ต URL เริ่มต้น</button>
           </div>
           <div id="gasTestResult" style="font-size:0.84rem; margin-top:6px;"></div>
         </div>
@@ -2364,6 +2364,7 @@
     // Configuration & Constants
     // =========================================================================
     const SPREADSHEET_ID = '1TJM3PnV12H__uoCv2VuwtfbceSRfmR3l4lq81xq8vJE';
+    const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbzfg80qYz8fFQtGMymFI40mpkIS7bhpzx_PQVxRHhS_HdrNR6ZD59n_QLD_MCUwuwI/exec';
     const STORAGE_KEY_GAS_URL = 'pm_plan_gas_webapp_url_v1';
     const STORAGE_KEY_PENDING = 'pm_plan_pending_changes_v1';
     const STORAGE_KEY_VIEW_MODE = 'pm_plan_view_mode_v2';
@@ -2457,7 +2458,12 @@
     let selectedRows = new Set();
     let editingMode = 'edit'; // 'edit' | 'add'
     let editingSheetRow = null;
-    let gasUrl = (localStorage.getItem(STORAGE_KEY_GAS_URL) || '').trim();
+    // ฝัง Web App URL ถาวรในระบบ เปิดจากเครื่องไหนหรือมือถือเครื่องใดก็ซิงค์ให้อัตโนมัติทันที
+    let gasUrl = (localStorage.getItem(STORAGE_KEY_GAS_URL) || DEFAULT_GAS_URL).trim();
+    if (!gasUrl || !gasUrl.startsWith('https://script.google.com/macros/s/')) {
+      gasUrl = DEFAULT_GAS_URL;
+      try { localStorage.setItem(STORAGE_KEY_GAS_URL, gasUrl); } catch (_) {}
+    }
     let pendingLocalOps = loadPendingOps();
 
     // Always use 'card' (แนวตั้ง / การ์ดมือถือ) on mobile screens
@@ -4310,14 +4316,11 @@
     // QR Code & Share Link Generator (เปิดใช้งานบนมือถือในทันที)
     // =========================================================================
     function getMobileShareUrl() {
-      if (gasUrl) {
-        return gasUrl;
-      }
       const loc = window.location;
       if (loc.protocol.startsWith('http')) {
         return loc.href;
       }
-      return 'https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID;
+      return 'https://pm-update-5yare.vercel.app';
     }
 
     function openQrModal() {
@@ -4677,11 +4680,11 @@ function deleteRow_(p) {
     }
 
     function clearGasUrl() {
-      gasUrl = '';
-      localStorage.removeItem(STORAGE_KEY_GAS_URL);
-      document.getElementById('gasUrlInput').value = '';
-      document.getElementById('gasTestResult').style.color = '#475569';
-      document.getElementById('gasTestResult').textContent = 'ล้าง URL แล้ว (กลับสู่โหมดอ่านข้อมูลสด/บันทึกในเครื่อง)';
+      gasUrl = DEFAULT_GAS_URL;
+      try { localStorage.setItem(STORAGE_KEY_GAS_URL, DEFAULT_GAS_URL); } catch (_) {}
+      document.getElementById('gasUrlInput').value = DEFAULT_GAS_URL;
+      document.getElementById('gasTestResult').style.color = '#059669';
+      document.getElementById('gasTestResult').textContent = 'รีเซ็ตกลับเป็น Web App URL เริ่มต้นของระบบเรียบร้อย (พร้อมซิงค์อัตโนมัติ)';
       updateConnectionPill();
       updatePendingBanner();
     }
