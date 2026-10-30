@@ -1106,11 +1106,11 @@
     }
 
     .status-0 { background-color: #f1f5f9; color: #475569; border-color: #cbd5e1; }
-    .status-1 { background-color: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
+    .status-1 { background-color: #faf5ff; color: #7e22ce; border-color: #e9d5ff; }
     .status-2 { background-color: #fef3c7; color: #b45309; border-color: #fcd34d; }
     .status-3 { background-color: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
     .status-4 { background-color: #d1fae5; color: #047857; border-color: #6ee7b7; }
-    .status-5 { background-color: #e0e7ff; color: #4338ca; border-color: #a5b4fc; }
+    .status-5 { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
 
     .cell-saving {
       opacity: 0.6;
@@ -1436,7 +1436,7 @@
       justify-content: space-between;
       padding: 12px 18px;
       border-radius: 12px;
-      border: 2px solid transparent;
+      border: 1.5px solid transparent;
       font-family: inherit;
       font-size: 0.95rem;
       font-weight: 600;
@@ -1446,12 +1446,20 @@
       text-align: left;
     }
 
+    .status-picker-btn.status-0 { border-color: #cbd5e1; }
+    .status-picker-btn.status-1 { border-color: #e9d5ff; }
+    .status-picker-btn.status-2 { border-color: #fcd34d; }
+    .status-picker-btn.status-3 { border-color: #fca5a5; }
+    .status-picker-btn.status-4 { border-color: #6ee7b7; }
+    .status-picker-btn.status-5 { border-color: #bfdbfe; }
+
     .status-picker-btn:active {
       transform: scale(0.98);
     }
 
     .status-picker-btn.selected {
-      border-color: #0f172a;
+      border-color: #0f172a !important;
+      border-width: 2px;
       box-shadow: var(--shadow-md);
     }
 
@@ -1813,7 +1821,7 @@
         <div class="brand-text">
           <h1 class="brand-title">
             <span>อัปเดตสถานะการเข้าบำรุงรักษาเชิงป้องกัน (PM)</span>
-            <span class="brand-badge" id="headerActiveTabBadge">ศูนย์ควบคุมสถานีแม่ข่าย</span>
+            <span class="brand-badge" id="headerActiveTabBadge">BSSC</span>
           </h1>
           <div class="brand-sub" id="lastSyncText" style="display:none;"></div>
         </div>
@@ -1852,9 +1860,9 @@
       <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:260px;">
         <label class="field-label" for="sheetTabSelect" style="margin:0; font-size:0.9rem; font-weight:700; white-space:nowrap; color:var(--text);">📁 เลือกประเภทสถานี:</label>
         <select id="sheetTabSelect" class="select" style="font-weight:700; font-size:0.95rem; padding:8px 12px; border-color:var(--primary); background:#eff6ff;" onchange="switchTab(this.value)">
-          <option value="BSSC" id="opt-BSSC" selected>ศูนย์ควบคุมสถานีแม่ข่าย • 1 สถานี</option>
-          <option value="BSGW" id="opt-BSGW">สถานี Analog Gateway และสถานีแม่ข่าย • 16 สถานี</option>
-          <option value="LK" id="opt-LK">สถานีวิทยุลูกข่าย • 181 สถานี</option>
+          <option value="BSSC" id="opt-BSSC" selected>BSSC (ศูนย์ควบคุม) • 1 สถานี</option>
+          <option value="BSGW" id="opt-BSGW">AGW/BS (สถานีทวนสัญญาณ , สถานีแม่ข่าย) • 16 สถานี</option>
+          <option value="LK" id="opt-LK">ลข (สถานีลูกข่าย) • 181 สถานี</option>
         </select>
       </div>
 
@@ -2203,11 +2211,11 @@
 
       <div class="modal-body" style="display:flex; flex-direction:column; gap:14px;">
         <div>
-          <div class="field-label" style="margin-bottom:6px;">📁 เลือกประเภทสถานีที่ต้องการทำงาน:</div>
-          <div style="display:flex; flex-direction:column; gap:6px;">
-            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabBSSC" onclick="switchTab('BSSC'); closeModal('mobileMenuModal');" style="justify-content:space-between; text-align:left;"><span>ศูนย์ควบคุมสถานีแม่ข่าย</span> <span id="mMenuCountBSSC" class="badge">0</span></button>
-            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabBSGW" onclick="switchTab('BSGW'); closeModal('mobileMenuModal');" style="justify-content:space-between; text-align:left;"><span>สถานี Analog Gateway และสถานีแม่ข่าย</span> <span id="mMenuCountBSGW" class="badge">0</span></button>
-            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabLK" onclick="switchTab('LK'); closeModal('mobileMenuModal');" style="justify-content:space-between; text-align:left;"><span>สถานีวิทยุลูกข่าย</span> <span id="mMenuCountLK" class="badge">0</span></button>
+          <div class="field-label" style="margin-bottom:6px;">📁 เลือกชีตที่ต้องการทำงาน:</div>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px;">
+            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabBSSC" onclick="switchTab('BSSC'); closeModal('mobileMenuModal');">BSSC (<span id="mMenuCountBSSC">0</span>)</button>
+            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabBSGW" onclick="switchTab('BSGW'); closeModal('mobileMenuModal');">AGW/BS (<span id="mMenuCountBSGW">0</span>)</button>
+            <button type="button" class="btn btn-outline btn-sm" id="mMenuTabLK" onclick="switchTab('LK'); closeModal('mobileMenuModal');">ลข (<span id="mMenuCountLK">0</span>)</button>
           </div>
         </div>
 
@@ -2458,18 +2466,18 @@
 
     const STATUS_META = {
       'รอดำเนินการ': { idx: 0, color: '#64748b', short: 'รอดำเนินการ', icon: '⚪' },
-      'ส่งหนังสือแจ้งแผนงานเรียบร้อย': { idx: 1, color: '#0284c7', short: 'ส่งหนังสือแจ้งแล้ว', icon: '🔵' },
+      'ส่งหนังสือแจ้งแผนงานเรียบร้อย': { idx: 1, color: '#9333ea', short: 'ส่งหนังสือแจ้งแล้ว', icon: '🟣' },
       'อยู่ระหว่างดำเนินการ': { idx: 2, color: '#d97706', short: 'อยู่ระหว่างทำ', icon: '🟡' },
       'พบปัญหา / รอดำเนินการแก้ไข': { idx: 3, color: '#dc2626', short: 'พบปัญหา/รอแก้ไข', icon: '🔴' },
       'ดำเนินการแล้วเสร็จ': { idx: 4, color: '#059669', short: 'ดำเนินการเสร็จ', icon: '🟢' },
-      'เอกสารจัดทำแล้วเสร็จ': { idx: 5, color: '#4f46e5', short: 'เอกสารแล้วเสร็จ', icon: '🟣' }
+      'เอกสารจัดทำแล้วเสร็จ': { idx: 5, color: '#2563eb', short: 'เอกสารแล้วเสร็จ', icon: '🔵' }
     };
 
     const TAB_SCHEMAS = {
       LK: {
         key: 'LK',
-        title: 'สถานีวิทยุลูกข่าย',
-        short: 'สถานีวิทยุลูกข่าย',
+        title: 'ลข (สถานีลูกข่าย)',
+        short: 'ลข',
         gid: '475478333',
         activeCols: 15,
         locLabels: { sub: 'ตำบล', dist: 'อำเภอ', prov: 'จังหวัด' },
@@ -2484,8 +2492,8 @@
       },
       BSGW: {
         key: 'BSGW',
-        title: 'สถานี Analog Gateway และสถานีแม่ข่าย',
-        short: 'สถานี Analog Gateway และสถานีแม่ข่าย',
+        title: 'AGW/BS (สถานีทวนสัญญาณ , สถานีแม่ข่าย)',
+        short: 'AGW/BS',
         gid: '1755639936',
         activeCols: 25,
         locLabels: { sub: 'ตำบล', dist: 'อำเภอ', prov: 'จังหวัด' },
@@ -2505,8 +2513,8 @@
       },
       BSSC: {
         key: 'BSSC',
-        title: 'ศูนย์ควบคุมสถานีแม่ข่าย',
-        short: 'ศูนย์ควบคุมสถานีแม่ข่าย',
+        title: 'BSSC (ศูนย์ควบคุม)',
+        short: 'BSSC',
         gid: '0',
         activeCols: 24,
         locLabels: { sub: 'แขวง', dist: 'เขต', prov: 'จังหวัด' },
@@ -2974,11 +2982,7 @@
     // UI Rendering & Filtering
     // =========================================================================
     function updateTabBadges() {
-      const names = {
-        BSSC: 'ศูนย์ควบคุมสถานีแม่ข่าย',
-        BSGW: 'สถานี Analog Gateway และสถานีแม่ข่าย',
-        LK: 'สถานีวิทยุลูกข่าย'
-      };
+      const names = { BSSC: 'BSSC (ศูนย์ควบคุม)', BSGW: 'AGW/BS (สถานีทวนสัญญาณ , สถานีแม่ข่าย)', LK: 'ลข (สถานีลูกข่าย)' };
       ['BSSC', 'BSGW', 'LK'].forEach(k => {
         const count = (appData[k] && appData[k].rows) ? appData[k].rows.length : 0;
         const el = document.getElementById('badge-' + k);
@@ -3330,19 +3334,19 @@
 
       const statusRounds = schema.rounds.filter(r => r.statusCol !== null);
       let kpiRounds = statusRounds;
-      let scopeText = `(${schema.title} - รวมทุกรอบ PM)`;
+      let scopeText = `(${schema.short} - รวมทุกรอบ PM)`;
 
       if (roundFilterVal !== 'ANY') {
         const found = statusRounds.find(r => r.id === roundFilterVal);
         if (found) {
           kpiRounds = [found];
-          scopeText = `(${schema.title} - ${found.label})`;
+          scopeText = `(${schema.short} - ${found.label})`;
         }
       } else if (focusRoundId !== 'ALL') {
         const found = statusRounds.find(r => r.id === focusRoundId);
         if (found) {
           kpiRounds = [found];
-          scopeText = `(${schema.title} - ${found.label})`;
+          scopeText = `(${schema.short} - ${found.label})`;
         }
       }
 
